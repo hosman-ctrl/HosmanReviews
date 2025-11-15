@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Latest Movies on Hosman - AI-Powered Movie Discovery</title>
+    <meta name="description" content="Discover your next favorite movie with AI-powered recommendations. Get personalized movie suggestions based on your preferences and join our Telegram community for reviews.">
+    <meta name="keywords" content="movies, film recommendations, AI movie suggestions, Telegram movie reviews, latest films">
+    <meta name="author" content="Hosman Reviews">
+    
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -28,83 +38,42 @@
             background-color: var(--telegram-bg);
             color: var(--telegram-text);
             line-height: 1.5;
-            padding-top: 60px;
-            transition: padding-top 0.3s ease;
         }
 
-        /* Header Styles */
-        header {
-            background-color: var(--telegram-card);
-            padding: 0.8rem 1.5rem;
+        /* Logo Section */
+        .logo-section {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--telegram-border);
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            transition: transform 0.3s ease, padding 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        header.scrolled {
-            transform: translateY(-40px);
-            padding: 0.3rem 1.5rem;
+            justify-content: center;
+            padding: 2rem 1rem 1rem;
         }
 
         .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            transition: opacity 0.3s ease;
-        }
-
-        header.scrolled .logo-container {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .logo {
-            width: 40px;
-            height: 40px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             overflow: hidden;
-            background: #C73737;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .logo-text {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--telegram-text);
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem 2rem;
         }
 
-        .logo-text span {
-            color: var(--primary);
-        }
-
+        /* Search Bar */
         .search-container {
             display: flex;
             align-items: center;
-            background-color: var(--telegram-bg);
+            background-color: var(--telegram-card);
             border-radius: 20px;
             padding: 0.5rem 1rem;
             width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            transition: all 0.3s ease;
+            max-width: 600px;
+            margin: 0 auto 2rem;
             border: 1px solid var(--telegram-border);
             position: relative;
-        }
-
-        header.scrolled .search-container {
-            max-width: 600px;
-            margin: 0 auto;
         }
 
         .search-container:focus-within {
@@ -154,90 +123,6 @@
 
         .search-container:focus-within .search-hint {
             opacity: 1;
-        }
-
-        .telegram-cta {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: background-color 0.3s;
-            font-size: 0.9rem;
-        }
-
-        .telegram-cta:hover {
-            background-color: var(--primary-dark);
-        }
-
-        /* Main Content */
-        main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1.5rem;
-        }
-
-        .hero {
-            background: linear-gradient(135deg, rgba(0, 136, 204, 0.1) 0%, rgba(0, 102, 153, 0.05) 100%);
-            border-radius: 16px;
-            padding: 2.5rem 2rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            border: 1px solid var(--telegram-border);
-        }
-
-        .hero h1 {
-            font-size: 2.2rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .hero p {
-            font-size: 1rem;
-            max-width: 600px;
-            margin: 0 auto 1.5rem;
-            color: var(--telegram-secondary);
-        }
-
-        .hero-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 0.7rem 1.5rem;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-            border: none;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .btn-secondary {
-            background-color: var(--telegram-card);
-            color: var(--telegram-text);
-            border: 1px solid var(--telegram-border);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--telegram-hover);
         }
 
         /* Sections */
@@ -347,6 +232,25 @@
             background-color: rgba(0, 136, 204, 0.1);
         }
 
+        .share-btn {
+            background: transparent;
+            border: none;
+            color: var(--telegram-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+            padding: 0.3rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        .share-btn:hover {
+            color: var(--primary);
+            background-color: rgba(0, 136, 204, 0.1);
+        }
+
         /* AI Recommendations */
         .ai-recommendations-container {
             margin-bottom: 2.5rem;
@@ -387,6 +291,28 @@
 
         .prompt-input input:focus {
             border-color: var(--primary);
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
         }
 
         .category-buttons {
@@ -443,7 +369,7 @@
         .load-more-container {
             display: flex;
             justify-content: center;
-            margin: 2rem 0 3rem;
+            margin: 1rem 0 2rem;
         }
 
         .load-more {
@@ -461,6 +387,46 @@
         }
 
         .load-more:hover {
+            background-color: var(--telegram-hover);
+        }
+
+        /* Hero Section at Bottom */
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 136, 204, 0.1) 0%, rgba(0, 102, 153, 0.05) 100%);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            margin: 2rem 0;
+            border: 1px solid var(--telegram-border);
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+            color: var(--telegram-secondary);
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background-color: var(--telegram-card);
+            color: var(--telegram-text);
+            border: 1px solid var(--telegram-border);
+        }
+
+        .btn-secondary:hover {
             background-color: var(--telegram-hover);
         }
 
@@ -543,16 +509,9 @@
         }
 
         @media (max-width: 768px) {
-            body {
-                padding-top: 50px;
-            }
-            
-            header {
-                padding: 0.6rem 1rem;
-            }
-            
-            .logo-text {
-                font-size: 1.1rem;
+            .logo-container {
+                width: 150px;
+                height: 150px;
             }
             
             .hero h1 {
@@ -754,6 +713,17 @@
             border: none;
         }
 
+        .telegram-webview-notice {
+            padding: 2rem;
+            text-align: center;
+            color: var(--telegram-secondary);
+        }
+
+        .telegram-webview-notice a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
         @media (max-width: 768px) {
             .movie-detail {
                 flex-direction: column;
@@ -781,23 +751,76 @@
         .searching {
             animation: searchPulse 1s infinite;
         }
+
+        /* Share Tooltip */
+        .share-tooltip {
+            position: absolute;
+            background: var(--telegram-card);
+            color: var(--telegram-text);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .share-tooltip.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header id="main-header">
+    <!-- Logo Section -->
+    <div class="logo-section">
         <div class="logo-container">
-            <div class="logo">
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="48" fill="#C73737" stroke="white" stroke-width="2"/>
-                    <circle cx="50" cy="50" r="40" fill="#8B2020" opacity="0.7"/>
-                    <text x="50" y="55" font-family="Georgia, serif" font-size="24" font-weight="bold" 
-                          fill="white" text-anchor="middle" font-style="italic">HR</text>
-                </svg>
-            </div>
-            <div class="logo-text">Latest Movies on <span>Hosman</span></div>
+            <svg viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+                        <feOffset dx="0" dy="4" result="offsetblur"/>
+                        <feComponentTransfer>
+                            <feFuncA type="linear" slope="0.5"/>
+                        </feComponentTransfer>
+                        <feMerge>
+                            <feMergeNode/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+                
+                <!-- Background -->
+                <rect width="640" height="480" fill="#C73737"/>
+                
+                <!-- Circle outline -->
+                <circle cx="320" cy="240" r="160" fill="none" stroke="white" stroke-width="12" opacity="0.9"/>
+                
+                <!-- Inner shadow circle -->
+                <circle cx="320" cy="240" r="148" fill="#8B2020" opacity="0.6"/>
+                
+                <!-- Text: Hosman -->
+                <text x="320" y="240" font-family="'Brush Script MT', cursive, serif" font-size="110" font-weight="bold" 
+                    fill="white" text-anchor="middle" filter="url(#shadow)" font-style="italic">
+                    Hosman
+                </text>
+                
+                <!-- Text: Reviews -->
+                <text x="320" y="330" font-family="'Brush Script MT', cursive, serif" font-size="70" font-weight="bold" 
+                    fill="white" text-anchor="middle" filter="url(#shadow)" font-style="italic">
+                    Reviews
+                </text>
+            </svg>
         </div>
-        
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Search Bar -->
         <div class="search-container">
             <input type="text" id="search-input" placeholder="Describe what you want to watch...">
             <button id="search-button"><i class="fas fa-search"></i></button>
@@ -805,24 +828,20 @@
                 <i class="fas fa-lightbulb"></i> Try natural language like "funny action movies with car chases" or "emotional dramas about family"
             </div>
         </div>
-        
-        <button class="telegram-cta" id="preview-telegram">
-            <i class="fab fa-telegram"></i> Preview Channel
-        </button>
-    </header>
 
-    <!-- Main Content -->
-    <main>
-        <!-- Hero Section -->
-        <section class="hero">
-            <h1>Discover Movies with AI</h1>
-            <p>Describe what you want to watch and our AI will find perfect matches for you. Join our Telegram community for daily reviews.</p>
-            <div class="hero-buttons">
-                <button class="btn btn-primary" id="join-telegram">
-                    <i class="fab fa-telegram"></i> Join t.me/HosmanReviews
-                </button>
-                <button class="btn btn-secondary" id="explore-upcoming">
-                    <i class="fas fa-calendar-alt"></i> Upcoming Movies
+        <!-- Trending Now -->
+        <section id="movies">
+            <div class="section-title">
+                <h2><i class="fas fa-fire"></i> Trending Now</h2>
+            </div>
+            <div class="cards-container" id="trending">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+            <div class="load-more-container">
+                <button class="load-more" id="load-more-trending">
+                    <i class="fas fa-plus"></i> Load More Trending Movies
                 </button>
             </div>
         </section>
@@ -837,7 +856,9 @@
                 <h3><i class="fas fa-comment-alt"></i> What would you like to watch?</h3>
                 <div class="prompt-input">
                     <input type="text" id="ai-prompt-input" placeholder="e.g., sci-fi movies with strong female leads">
-                    <button class="btn btn-primary" id="generate-recommendations">Get Recommendations</button>
+                    <button class="btn btn-primary" id="generate-recommendations">
+                        <i class="fas fa-search"></i> Get AI Recommendations
+                    </button>
                 </div>
                 
                 <div class="category-buttons">
@@ -862,18 +883,10 @@
                     <div class="spinner"></div>
                 </div>
             </div>
-        </section>
-
-        <!-- Trending Now -->
-        <section id="movies">
-            <div class="section-title">
-                <h2><i class="fas fa-fire"></i> Trending Now</h2>
-                <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
-            </div>
-            <div class="cards-container" id="trending">
-                <div class="loading">
-                    <div class="spinner"></div>
-                </div>
+            <div class="load-more-container">
+                <button class="load-more" id="load-more-ai">
+                    <i class="fas fa-plus"></i> Load More Recommendations
+                </button>
             </div>
         </section>
 
@@ -881,7 +894,6 @@
         <section class="upcoming-movies" id="upcoming-movies">
             <div class="section-title">
                 <h2><i class="fas fa-calendar-plus"></i> Coming Soon</h2>
-                <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
             </div>
             <div class="cards-container" id="upcoming-container">
                 <div class="loading">
@@ -890,12 +902,19 @@
             </div>
         </section>
 
-        <!-- Load More Button -->
-        <div class="load-more-container">
-            <button class="load-more" id="load-more">
-                <i class="fas fa-plus"></i> Load More Movies
-            </button>
-        </div>
+        <!-- Hero Section at Bottom -->
+        <section class="hero">
+            <h1>Discover Movies with AI</h1>
+            <p>Describe what you want to watch and our AI will find perfect matches for you. Join our Telegram community for daily reviews.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" id="join-telegram">
+                    <i class="fab fa-telegram"></i> Join t.me/HosmanReviews
+                </button>
+                <button class="btn btn-secondary" id="preview-telegram">
+                    <i class="fas fa-eye"></i> Preview Channel
+                </button>
+            </div>
+        </section>
     </main>
 
     <!-- Footer -->
@@ -942,9 +961,14 @@
                         <h3><i class="fas fa-robot"></i> AI Insights</h3>
                         <p id="modal-ai-insights">Loading AI insights...</p>
                     </div>
-                    <button class="telegram-cta" id="modal-telegram-cta" style="margin-top: 1rem;">
-                        <i class="fab fa-telegram"></i> Discuss on Telegram
-                    </button>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-primary" id="modal-join-telegram">
+                            <i class="fab fa-telegram"></i> Join Community
+                        </button>
+                        <button class="btn btn-secondary" id="modal-share-btn">
+                            <i class="fas fa-share"></i> Share
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -957,7 +981,11 @@
                 <h3><i class="fab fa-telegram"></i> Hosman Reviews Channel</h3>
                 <button class="close-modal">&times;</button>
             </div>
-            <iframe src="https://t.me/s/HosmanReviews" class="telegram-preview-iframe" id="telegram-iframe"></iframe>
+            <div class="telegram-webview-notice">
+                <p>Telegram channels cannot be embedded directly due to security restrictions.</p>
+                <p>Please visit our channel directly to see the latest reviews:</p>
+                <p><a href="https://t.me/HosmanReviews" target="_blank">https://t.me/HosmanReviews</a></p>
+            </div>
         </div>
     </div>
 
@@ -969,11 +997,14 @@
         const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
         const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
         const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';
+        const WEBSITE_URL = 'https://hosman-ctrl.github.io/HosmanReviews/#';
 
         // Global variables
-        let currentPage = 1;
+        let trendingPage = 1;
+        let aiPage = 1;
         let currentCategory = '';
         let currentSearchQuery = '';
+        let currentMovieForShare = null;
 
         // TMDB API Functions
         async function fetchFromTMDB(endpoint) {
@@ -997,10 +1028,10 @@
         }
 
         // Fetch trending movies
-        async function fetchTrendingMovies() {
-            const data = await fetchFromTMDB('/trending/movie/week');
+        async function fetchTrendingMovies(page = 1) {
+            const data = await fetchFromTMDB(`/trending/movie/week?page=${page}`);
             if (data && data.results) {
-                return data.results.slice(0, 12);
+                return data.results;
             }
             return [];
         }
@@ -1058,22 +1089,59 @@
                 const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
                 const year = item.release_date ? item.release_date.substring(0, 4) : 'N/A';
                 
-                // For demo purposes, we'll simulate Gemini API response
-                // In a real implementation, you would call the Gemini API
-                const insights = [
-                    `This film stands out for its ${rating > 7 ? 'exceptional' : 'solid'} storytelling and engaging ${item.genre_ids && item.genre_ids.includes(28) ? 'action sequences' : 'narrative'}.`,
-                    `With a rating of ${rating}/10, this movie delivers ${prompt.includes('comedy') ? 'consistent laughs' : 'compelling drama'} that will keep you entertained.`,
-                    `Fans of ${prompt || 'quality cinema'} will appreciate the ${year > 2020 ? 'contemporary' : 'timeless'} approach to ${item.genre_ids && item.genre_ids.includes(878) ? 'science fiction' : 'its genre'}.`,
-                    `The film balances ${item.vote_average > 7 ? 'critical acclaim with popular appeal' : 'unique elements that make it worth watching'} for viewers seeking ${prompt || 'entertainment'}.`
-                ];
+                // Enhanced AI insights that focus on standout elements
+                const standoutElements = [];
+                
+                if (item.vote_average > 7.5) {
+                    standoutElements.push('exceptionally high audience ratings');
+                }
+                
+                if (item.popularity > 100) {
+                    standoutElements.push('significant popularity among viewers');
+                }
+                
+                if (description && description.length > 150) {
+                    standoutElements.push('complex and engaging storyline');
+                }
+                
+                if (item.genre_ids && item.genre_ids.includes(28)) {
+                    standoutElements.push('thrilling action sequences');
+                }
+                
+                if (item.genre_ids && item.genre_ids.includes(35)) {
+                    standoutElements.push('sharp comedic timing');
+                }
+                
+                if (item.genre_ids && item.genre_ids.includes(18)) {
+                    standoutElements.push('deep emotional resonance');
+                }
+                
+                if (item.genre_ids && item.genre_ids.includes(878)) {
+                    standoutElements.push('imaginative world-building');
+                }
+                
+                // Create insight based on standout elements
+                let insight = `This film stands out for its `;
+                
+                if (standoutElements.length > 0) {
+                    if (standoutElements.length === 1) {
+                        insight += standoutElements[0];
+                    } else {
+                        insight += standoutElements.slice(0, -1).join(', ') + ' and ' + standoutElements[standoutElements.length - 1];
+                    }
+                } else {
+                    insight += `solid storytelling and ${rating > 7 ? 'strong' : 'consistent'} performances`;
+                }
+                
+                insight += `. With a rating of ${rating}/10, it delivers ${prompt.includes('comedy') ? 'consistent laughs' : 'compelling entertainment'} that will keep you engaged.`;
                 
                 // Simulate API delay
                 await new Promise(resolve => setTimeout(resolve, 800));
                 
-                return insights[Math.floor(Math.random() * insights.length)];
+                return insight;
             } catch (error) {
                 console.error("Gemini API error:", error);
-                return "AI insights temporarily unavailable. This film has received positive audience reception.";
+                return "AI insights temporarily unavailable. This film has received positive audience reception for its engaging storytelling and quality production.";
             }
         }
 
@@ -1095,7 +1163,7 @@
         }
 
         // Create card for movie
-        function createCard(item, containerId) {
+        function createCard(item, containerId, showShareButton = true) {
             const container = document.getElementById(containerId);
             
             const title = item.title;
@@ -1119,9 +1187,11 @@
                         <button class="card-action" onclick="openModal(${item.id})">
                             <i class="fas fa-info-circle"></i> Details
                         </button>
-                        <button class="card-action" onclick="openTelegramDiscussion('${title.replace(/'/g, "\\'")}')">
-                            <i class="fab fa-telegram"></i> Discuss
+                        ${showShareButton ? `
+                        <button class="share-btn" onclick="shareMovie('${title.replace(/'/g, "\\'")}')">
+                            <i class="fas fa-share"></i> Share
                         </button>
+                        ` : ''}
                     </div>
                 </div>
             `;
@@ -1154,6 +1224,8 @@
                     return;
                 }
                 
+                currentMovieForShare = item;
+                
                 const title = item.title;
                 const year = item.release_date ? item.release_date.substring(0, 4) : 'TBA';
                 const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
@@ -1178,15 +1250,47 @@
             }
         }
 
-        // Open Telegram discussion
-        function openTelegramDiscussion(title) {
-            const encodedTitle = encodeURIComponent(title);
-            window.open(`https://t.me/HosmanReviews?text=Discussing%20${encodedTitle}`, '_blank');
+        // Share movie function
+        function shareMovie(title) {
+            const shareUrl = `${WEBSITE_URL}?search=${encodeURIComponent(title)}`;
+            
+            // Create a temporary input element
+            const tempInput = document.createElement('input');
+            tempInput.value = shareUrl;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            // Show tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'share-tooltip show';
+            tooltip.textContent = 'Link copied to clipboard!';
+            document.body.appendChild(tooltip);
+            
+            // Position tooltip near the share button
+            const shareButtons = document.querySelectorAll('.share-btn');
+            const lastShareButton = shareButtons[shareButtons.length - 1];
+            const rect = lastShareButton.getBoundingClientRect();
+            tooltip.style.top = `${rect.top - 40}px`;
+            tooltip.style.left = `${rect.left + rect.width/2}px`;
+            tooltip.style.transform = 'translateX(-50%)';
+            
+            // Remove tooltip after 2 seconds
+            setTimeout(() => {
+                tooltip.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(tooltip);
+                }, 300);
+            }, 2000);
         }
 
         // Perform AI recommendations
-        async function performAIRecommendations(prompt, category = '') {
-            showLoading('ai-recommendations');
+        async function performAIRecommendations(prompt, category = '', loadMore = false) {
+            if (!loadMore) {
+                showLoading('ai-recommendations');
+                aiPage = 1;
+            }
             
             // Show searching animation
             const searchButton = document.getElementById('generate-recommendations');
@@ -1196,75 +1300,80 @@
                 let movies = [];
                 
                 if (category) {
-                    movies = await fetchMoviesByCategory(category);
+                    movies = await fetchMoviesByCategory(category, aiPage);
                     currentCategory = category;
                     currentSearchQuery = '';
+                } else if (prompt) {
+                    movies = await searchTMDB(prompt, aiPage);
+                    currentSearchQuery = prompt;
+                    currentCategory = '';
                 } else {
                     // For demo, we'll use a mix of trending and genre-based
-                    const trending = await fetchTrendingMovies();
-                    movies = trending.slice(0, 3); // Show only 3 recommendations
-                    currentSearchQuery = prompt;
+                    const trending = await fetchTrendingMovies(aiPage);
+                    movies = trending.slice(0, 6); // Show 6 recommendations
+                    currentSearchQuery = '';
                     currentCategory = '';
                 }
                 
-                clearContainer('ai-recommendations');
+                if (!loadMore) {
+                    clearContainer('ai-recommendations');
+                }
                 
                 if (movies.length === 0) {
-                    document.getElementById('ai-recommendations').innerHTML = `
-                        <div style="text-align: center; padding: 2rem; color: var(--telegram-secondary); grid-column: 1 / -1;">
-                            <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                            <h3>No recommendations found</h3>
-                            <p>Try a different description or category.</p>
-                        </div>
-                    `;
+                    if (!loadMore) {
+                        document.getElementById('ai-recommendations').innerHTML = `
+                            <div style="text-align: center; padding: 2rem; color: var(--telegram-secondary); grid-column: 1 / -1;">
+                                <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                                <h3>No recommendations found</h3>
+                                <p>Try a different description or category.</p>
+                            </div>
+                        `;
+                    }
                 } else {
-                    // Show AI reason
-                    const reasonText = generateAIReason(prompt, category);
-                    document.getElementById('reason-text').textContent = reasonText;
-                    document.getElementById('ai-reason').style.display = 'block';
+                    // Show AI reason if it's a new search
+                    if (!loadMore) {
+                        const reasonText = generateAIReason(prompt, category);
+                        document.getElementById('reason-text').textContent = reasonText;
+                        document.getElementById('ai-reason').style.display = 'block';
+                    }
                     
                     // Display recommendations
                     movies.forEach(movie => {
-                        createCard(movie, 'ai-recommendations');
+                        createCard(movie, 'ai-recommendations', false);
                     });
+                    
+                    // Show load more button if we have results
+                    document.getElementById('load-more-ai').style.display = 'flex';
                 }
             } catch (error) {
                 console.error('AI recommendation error:', error);
-                document.getElementById('ai-recommendations').innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: var(--telegram-secondary); grid-column: 1 / -1;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                        <h3>Recommendation Error</h3>
-                        <p>Unable to generate recommendations. Please try again later.</p>
-                    </div>
-                `;
+                if (!loadMore) {
+                    document.getElementById('ai-recommendations').innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: var(--telegram-secondary); grid-column: 1 / -1;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <h3>Recommendation Error</h3>
+                            <p>Unable to generate recommendations. Please try again later.</p>
+                        </div>
+                    `;
+                }
             } finally {
                 searchButton.classList.remove('searching');
             }
         }
 
-        // Load more movies
-        async function loadMoreMovies() {
-            const loadMoreButton = document.getElementById('load-more');
+        // Load more trending movies
+        async function loadMoreTrending() {
+            const loadMoreButton = document.getElementById('load-more-trending');
             loadMoreButton.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div> Loading...';
             loadMoreButton.disabled = true;
             
             try {
-                currentPage++;
-                let additionalMovies = [];
-                
-                if (currentSearchQuery) {
-                    additionalMovies = await searchTMDB(currentSearchQuery, currentPage);
-                } else if (currentCategory) {
-                    additionalMovies = await fetchMoviesByCategory(currentCategory, currentPage);
-                } else {
-                    // Load more trending movies
-                    const data = await fetchFromTMDB(`/trending/movie/week?page=${currentPage}`);
-                    additionalMovies = data.results || [];
-                }
+                trendingPage++;
+                const additionalMovies = await fetchTrendingMovies(trendingPage);
                 
                 if (additionalMovies.length > 0) {
                     additionalMovies.forEach(movie => {
-                        createCard(movie, 'trending');
+                        createCard(movie, 'trending', true);
                     });
                 } else {
                     loadMoreButton.innerHTML = '<i class="fas fa-check"></i> No More Movies';
@@ -1275,7 +1384,27 @@
                 loadMoreButton.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error Loading';
             } finally {
                 setTimeout(() => {
-                    loadMoreButton.innerHTML = '<i class="fas fa-plus"></i> Load More Movies';
+                    loadMoreButton.innerHTML = '<i class="fas fa-plus"></i> Load More Trending Movies';
+                    loadMoreButton.disabled = false;
+                }, 2000);
+            }
+        }
+
+        // Load more AI recommendations
+        async function loadMoreAI() {
+            const loadMoreButton = document.getElementById('load-more-ai');
+            loadMoreButton.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div> Loading...';
+            loadMoreButton.disabled = true;
+            
+            try {
+                aiPage++;
+                await performAIRecommendations(currentSearchQuery, currentCategory, true);
+            } catch (error) {
+                console.error('Load more AI error:', error);
+                loadMoreButton.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error Loading';
+            } finally {
+                setTimeout(() => {
+                    loadMoreButton.innerHTML = '<i class="fas fa-plus"></i> Load More Recommendations';
                     loadMoreButton.disabled = false;
                 }, 2000);
             }
@@ -1296,13 +1425,13 @@
                 // Populate sections with real data
                 if (trendingData.length > 0) {
                     trendingData.forEach(movie => {
-                        createCard(movie, 'trending');
+                        createCard(movie, 'trending', true);
                     });
                 }
                 
                 if (upcomingData.length > 0) {
                     upcomingData.forEach(movie => {
-                        createCard(movie, 'upcoming-container');
+                        createCard(movie, 'upcoming-container', false);
                     });
                 }
                     
@@ -1323,24 +1452,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize with real TMDB data
             initializePage();
-            
-            // Header scroll behavior
-            let lastScrollTop = 0;
-            const header = document.getElementById('main-header');
-            
-            window.addEventListener('scroll', function() {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                
-                if (scrollTop > lastScrollTop && scrollTop > 100) {
-                    // Scrolling down
-                    header.classList.add('scrolled');
-                } else {
-                    // Scrolling up
-                    header.classList.remove('scrolled');
-                }
-                
-                lastScrollTop = scrollTop;
-            });
             
             // Search functionality
             document.getElementById('search-button').addEventListener('click', function() {
@@ -1400,8 +1511,9 @@
                 });
             });
             
-            // Load more button
-            document.getElementById('load-more').addEventListener('click', loadMoreMovies);
+            // Load more buttons
+            document.getElementById('load-more-trending').addEventListener('click', loadMoreTrending);
+            document.getElementById('load-more-ai').addEventListener('click', loadMoreAI);
             
             // Telegram CTAs
             document.getElementById('join-telegram').addEventListener('click', function() {
@@ -1412,8 +1524,15 @@
                 document.getElementById('telegram-preview-modal').style.display = 'block';
             });
             
-            document.getElementById('explore-upcoming').addEventListener('click', function() {
-                document.getElementById('upcoming-movies').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('modal-join-telegram').addEventListener('click', function() {
+                window.open('https://t.me/HosmanReviews', '_blank');
+            });
+            
+            // Modal share button
+            document.getElementById('modal-share-btn').addEventListener('click', function() {
+                if (currentMovieForShare) {
+                    shareMovie(currentMovieForShare.title);
+                }
             });
             
             // Modal close
@@ -1432,6 +1551,14 @@
                     document.getElementById('telegram-preview-modal').style.display = 'none';
                 }
             });
+
+            // Check for URL parameters on page load
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchParam = urlParams.get('search');
+            if (searchParam) {
+                document.getElementById('search-input').value = searchParam;
+                performAIRecommendations(searchParam);
+            }
         });
     </script>
 </body>
