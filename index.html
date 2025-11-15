@@ -44,12 +44,12 @@
         .logo-section {
             display: flex;
             justify-content: center;
-            padding: 2rem 1rem 1rem;
+            padding: 1.5rem 1rem 1rem;
         }
 
         .logo-container {
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             overflow: hidden;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
@@ -60,69 +60,6 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 1rem 1.5rem 2rem;
-        }
-
-        /* Search Bar */
-        .search-container {
-            display: flex;
-            align-items: center;
-            background-color: var(--telegram-card);
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            border: 1px solid var(--telegram-border);
-            position: relative;
-        }
-
-        .search-container:focus-within {
-            box-shadow: 0 0 0 2px var(--primary);
-            border-color: var(--primary);
-        }
-
-        .search-container input {
-            background: transparent;
-            border: none;
-            color: var(--telegram-text);
-            width: 100%;
-            padding: 0.5rem;
-            outline: none;
-            font-size: 0.95rem;
-        }
-
-        .search-container button {
-            background: transparent;
-            border: none;
-            color: var(--telegram-secondary);
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .search-container button:hover {
-            color: var(--primary);
-        }
-
-        .search-hint {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: var(--telegram-card);
-            padding: 0.8rem;
-            border-radius: 10px;
-            margin-top: 5px;
-            font-size: 0.85rem;
-            color: var(--telegram-secondary);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            z-index: 10;
-        }
-
-        .search-container:focus-within .search-hint {
-            opacity: 1;
         }
 
         /* Sections */
@@ -510,8 +447,8 @@
 
         @media (max-width: 768px) {
             .logo-container {
-                width: 150px;
-                height: 150px;
+                width: 120px;
+                height: 120px;
             }
             
             .hero h1 {
@@ -564,7 +501,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Modal */
+        /* Movie Detail Modal (using the Telegram preview style) */
         .modal {
             display: none;
             position: fixed;
@@ -572,37 +509,45 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            z-index: 2000;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
             overflow-y: auto;
         }
 
         .modal-content {
-            background-color: var(--telegram-card);
+            background-color: var(--telegram-bg);
             margin: 2rem auto;
-            padding: 2rem;
-            border-radius: 16px;
-            max-width: 800px;
-            width: 90%;
+            padding: 0;
+            border-radius: 12px;
+            max-width: 90%;
+            width: 800px;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            height: 80vh;
         }
 
-        .close-modal {
-            position: absolute;
-            top: 1rem;
-            right: 1.5rem;
-            font-size: 1.5rem;
-            color: var(--telegram-secondary);
-            cursor: pointer;
-            transition: color 0.3s;
-            background: none;
-            border: none;
+        .modal-header {
+            background-color: var(--telegram-card);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--telegram-border);
         }
 
-        .close-modal:hover {
-            color: var(--telegram-text);
+        .modal-header h3 {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            height: calc(100% - 60px);
+            overflow-y: auto;
         }
 
         .movie-detail {
@@ -614,6 +559,11 @@
         .movie-poster {
             width: 300px;
             border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .movie-info {
+            flex: 1;
         }
 
         .movie-info h2 {
@@ -650,18 +600,10 @@
             color: var(--primary);
         }
 
-        .telegram-review {
-            background-color: var(--telegram-bg);
-            border-radius: 10px;
-            padding: 1.2rem;
-            border-left: 3px solid var(--primary);
-        }
-
-        .telegram-review h3 {
+        .modal-actions {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.8rem;
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
 
         /* Telegram Preview Modal */
@@ -707,21 +649,26 @@
             gap: 0.5rem;
         }
 
-        .telegram-preview-iframe {
-            width: 100%;
-            height: calc(100% - 60px);
-            border: none;
-        }
-
         .telegram-webview-notice {
             padding: 2rem;
             text-align: center;
             color: var(--telegram-secondary);
+            height: calc(100% - 60px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .telegram-webview-notice a {
             color: var(--primary);
             text-decoration: none;
+        }
+
+        .telegram-webview-notice i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
         }
 
         @media (max-width: 768px) {
@@ -735,9 +682,13 @@
                 margin: 0 auto;
             }
             
-            .telegram-preview-content {
+            .modal-content, .telegram-preview-content {
                 width: 95%;
                 height: 70vh;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
             }
         }
 
@@ -820,32 +771,6 @@
 
     <!-- Main Content -->
     <main>
-        <!-- Search Bar -->
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="Describe what you want to watch...">
-            <button id="search-button"><i class="fas fa-search"></i></button>
-            <div class="search-hint">
-                <i class="fas fa-lightbulb"></i> Try natural language like "funny action movies with car chases" or "emotional dramas about family"
-            </div>
-        </div>
-
-        <!-- Trending Now -->
-        <section id="movies">
-            <div class="section-title">
-                <h2><i class="fas fa-fire"></i> Trending Now</h2>
-            </div>
-            <div class="cards-container" id="trending">
-                <div class="loading">
-                    <div class="spinner"></div>
-                </div>
-            </div>
-            <div class="load-more-container">
-                <button class="load-more" id="load-more-trending">
-                    <i class="fas fa-plus"></i> Load More Trending Movies
-                </button>
-            </div>
-        </section>
-
         <!-- AI Recommendations -->
         <section class="ai-recommendations-container">
             <div class="section-title">
@@ -886,6 +811,23 @@
             <div class="load-more-container">
                 <button class="load-more" id="load-more-ai">
                     <i class="fas fa-plus"></i> Load More Recommendations
+                </button>
+            </div>
+        </section>
+
+        <!-- Trending Now -->
+        <section id="movies">
+            <div class="section-title">
+                <h2><i class="fas fa-fire"></i> Trending Now</h2>
+            </div>
+            <div class="cards-container" id="trending">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+            <div class="load-more-container">
+                <button class="load-more" id="load-more-trending">
+                    <i class="fas fa-plus"></i> Load More Trending Movies
                 </button>
             </div>
         </section>
@@ -943,31 +885,36 @@
         </div>
     </footer>
 
-    <!-- Movie Detail Modal -->
+    <!-- Movie Detail Modal (using Telegram preview style) -->
     <div class="modal" id="movie-modal">
         <div class="modal-content">
-            <button class="close-modal">&times;</button>
-            <div class="movie-detail">
-                <img src="" alt="Movie Poster" class="movie-poster">
-                <div class="movie-info">
-                    <h2 id="modal-title">Movie Title</h2>
-                    <div class="movie-meta">
-                        <span id="modal-year">2023</span>
-                        <span id="modal-rating">8.5/10</span>
-                        <span id="modal-runtime">120min</span>
-                    </div>
-                    <p class="movie-overview" id="modal-overview">Movie overview goes here...</p>
-                    <div class="ai-insights">
-                        <h3><i class="fas fa-robot"></i> AI Insights</h3>
-                        <p id="modal-ai-insights">Loading AI insights...</p>
-                    </div>
-                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                        <button class="btn btn-primary" id="modal-join-telegram">
-                            <i class="fab fa-telegram"></i> Join Community
-                        </button>
-                        <button class="btn btn-secondary" id="modal-share-btn">
-                            <i class="fas fa-share"></i> Share
-                        </button>
+            <div class="modal-header">
+                <h3><i class="fas fa-film"></i> Movie Details</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="movie-detail">
+                    <img src="" alt="Movie Poster" class="movie-poster">
+                    <div class="movie-info">
+                        <h2 id="modal-title">Movie Title</h2>
+                        <div class="movie-meta">
+                            <span id="modal-year">2023</span>
+                            <span id="modal-rating">8.5/10</span>
+                            <span id="modal-runtime">120min</span>
+                        </div>
+                        <p class="movie-overview" id="modal-overview">Movie overview goes here...</p>
+                        <div class="ai-insights">
+                            <h3><i class="fas fa-robot"></i> What to Expect</h3>
+                            <p id="modal-ai-insights">Loading AI insights...</p>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn btn-primary" id="modal-join-telegram">
+                                <i class="fab fa-telegram"></i> Join Community
+                            </button>
+                            <button class="btn btn-secondary" id="modal-share-btn">
+                                <i class="fas fa-share"></i> Share
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -982,9 +929,14 @@
                 <button class="close-modal">&times;</button>
             </div>
             <div class="telegram-webview-notice">
+                <i class="fab fa-telegram"></i>
+                <h3>Visit Our Telegram Channel</h3>
                 <p>Telegram channels cannot be embedded directly due to security restrictions.</p>
                 <p>Please visit our channel directly to see the latest reviews:</p>
                 <p><a href="https://t.me/HosmanReviews" target="_blank">https://t.me/HosmanReviews</a></p>
+                <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="window.open('https://t.me/HosmanReviews', '_blank')">
+                    <i class="fab fa-telegram"></i> Open Telegram Channel
+                </button>
             </div>
         </div>
     </div>
@@ -1089,7 +1041,7 @@
                 const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
                 const year = item.release_date ? item.release_date.substring(0, 4) : 'N/A';
                 
-                // Enhanced AI insights that focus on standout elements
+                // Enhanced AI insights that focus on what to expect
                 const standoutElements = [];
                 
                 if (item.vote_average > 7.5) {
@@ -1120,8 +1072,24 @@
                     standoutElements.push('imaginative world-building');
                 }
                 
-                // Create insight based on standout elements
-                let insight = `This film stands out for its `;
+                if (item.genre_ids && item.genre_ids.includes(53)) {
+                    standoutElements.push('suspenseful plot twists');
+                }
+                
+                if (item.genre_ids && item.genre_ids.includes(10749)) {
+                    standoutElements.push('compelling romantic dynamics');
+                }
+                
+                if (item.genre_ids && item.genre_ids.includes(27)) {
+                    standoutElements.push('atmospheric tension and scares');
+                }
+                
+                if (item.genre_ids && item.genre_ids.includes(16)) {
+                    standoutElements.push('visually stunning animation');
+                }
+                
+                // Create insight focused on what to expect
+                let insight = `When watching "${title}", you can expect `;
                 
                 if (standoutElements.length > 0) {
                     if (standoutElements.length === 1) {
@@ -1130,10 +1098,27 @@
                         insight += standoutElements.slice(0, -1).join(', ') + ' and ' + standoutElements[standoutElements.length - 1];
                     }
                 } else {
-                    insight += `solid storytelling and ${rating > 7 ? 'strong' : 'consistent'} performances`;
+                    insight += `a ${rating > 7 ? 'highly' : 'consistently'} entertaining experience`;
                 }
                 
-                insight += `. With a rating of ${rating}/10, it delivers ${prompt.includes('comedy') ? 'consistent laughs' : 'compelling entertainment'} that will keep you engaged.`;
+                insight += `. The film has a rating of ${rating}/10 and ${prompt.includes('comedy') ? 'will keep you laughing' : 'offers a compelling watch'}.`;
+                
+                // Add more specific expectations based on genre
+                if (item.genre_ids && item.genre_ids.includes(28)) {
+                    insight += ` Action fans will appreciate the well-choreographed sequences and high-stakes scenarios.`;
+                }
+                
+                if (item.genre_ids && item.genre_ids.includes(35)) {
+                    insight += ` The humor is well-timed and the comedic situations will leave you entertained throughout.`;
+                }
+                
+                if (item.genre_ids && item.genre_ids.includes(18)) {
+                    insight += ` The emotional depth and character development make this a thought-provoking viewing experience.`;
+                }
+                
+                if (item.genre_ids && item.genre_ids.includes(878)) {
+                    insight += ` The imaginative concepts and futuristic elements create a captivating world to explore.`;
+                }
                 
                 // Simulate API delay
                 await new Promise(resolve => setTimeout(resolve, 800));
@@ -1141,7 +1126,7 @@
                 return insight;
             } catch (error) {
                 console.error("Gemini API error:", error);
-                return "AI insights temporarily unavailable. This film has received positive audience reception for its engaging storytelling and quality production.";
+                return "When watching this film, you can expect an engaging experience with solid storytelling and quality production values. The movie has received positive audience reception for its entertainment value and execution.";
             }
         }
 
@@ -1453,31 +1438,6 @@
             // Initialize with real TMDB data
             initializePage();
             
-            // Search functionality
-            document.getElementById('search-button').addEventListener('click', function() {
-                const query = document.getElementById('search-input').value.trim();
-                if (query) {
-                    currentSearchQuery = query;
-                    currentCategory = '';
-                    performAIRecommendations(query);
-                } else {
-                    alert('Please enter a search query');
-                }
-            });
-            
-            document.getElementById('search-input').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const query = document.getElementById('search-input').value.trim();
-                    if (query) {
-                        currentSearchQuery = query;
-                        currentCategory = '';
-                        performAIRecommendations(query);
-                    } else {
-                        alert('Please enter a search query');
-                    }
-                }
-            });
-            
             // AI recommendations
             document.getElementById('generate-recommendations').addEventListener('click', function() {
                 const prompt = document.getElementById('ai-prompt-input').value.trim();
@@ -1556,7 +1516,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const searchParam = urlParams.get('search');
             if (searchParam) {
-                document.getElementById('search-input').value = searchParam;
+                document.getElementById('ai-prompt-input').value = searchParam;
                 performAIRecommendations(searchParam);
             }
         });
