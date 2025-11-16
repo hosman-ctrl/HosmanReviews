@@ -20,6 +20,7 @@
             --border-color: #e0e0e0;
             --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             --modal-overlay: rgba(0, 0, 0, 0.7);
+            --accent-color: #ff6b6b;
         }
 
         .dark-theme {
@@ -35,6 +36,7 @@
             --border-color: #333333;
             --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             --modal-overlay: rgba(0, 0, 0, 0.85);
+            --accent-color: #ff6b6b;
         }
 
         * {
@@ -49,6 +51,7 @@
             color: var(--text-color);
             line-height: 1.6;
             padding: 16px;
+            padding-bottom: 80px; /* Space for the bottom button */
             transition: background-color 0.3s, color 0.3s;
         }
 
@@ -94,6 +97,32 @@
 
         .section-title i {
             color: var(--link-color);
+        }
+
+        /* Info button */
+        .info-button {
+            background: none;
+            border: none;
+            color: var(--hint-color);
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .info-button:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text-color);
+        }
+
+        .dark-theme .info-button:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         /* Cards Grid - Always 2 columns with reduced height */
@@ -204,14 +233,23 @@
             margin-bottom: 1rem;
         }
 
+        /* Beautified Search Bar */
         .ai-input {
             flex: 1;
-            padding: 0.8rem;
+            padding: 0.8rem 1rem;
             border: 1px solid var(--border-color);
             border-radius: 12px;
             background: var(--secondary-bg);
             color: var(--text-color);
             font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .ai-input:focus {
+            outline: none;
+            border-color: var(--link-color);
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2);
         }
 
         .ai-input::placeholder {
@@ -232,6 +270,7 @@
             align-items: center;
             gap: 0.5rem;
             min-height: 44px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .btn:active {
@@ -243,6 +282,10 @@
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
+        }
+
+        .btn-accent {
+            background: var(--accent-color);
         }
 
         .categories {
@@ -291,6 +334,38 @@
             color: var(--text-color);
             font-size: 0.9rem;
             line-height: 1.5;
+        }
+
+        /* Year Filter Section */
+        .year-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .year-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dark-theme .year-btn {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .year-btn.active {
+            background: var(--button-color);
+            border-color: var(--button-color);
+            color: var(--button-text-color);
         }
 
         /* Load More Button */
@@ -351,18 +426,23 @@
 
         .modal-content {
             background: var(--bg-color);
-            margin: 2rem auto;
+            margin: auto;
             border-radius: 16px;
-            max-width: 600px; /* Reduced from 800px */
-            position: relative;
-            border: 1px solid var(--border-color);
-            transform: scale(0.9);
+            max-width: 600px;
+            width: 90%;
+            max-height: 60vh; /* Half the screen height */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
             transition: transform 0.3s ease;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .modal.show .modal-content {
-            transform: scale(1);
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .close-modal {
@@ -403,20 +483,29 @@
         }
 
         .modal-body {
-            padding: 1rem 1.5rem 1.5rem;
+            padding: 1rem 1.5rem;
+            flex: 1;
+            overflow-y: auto;
             display: grid;
-            grid-template-columns: 150px 1fr; /* Reduced image size */
-            gap: 1.5rem;
+            grid-template-columns: 120px 1fr; /* Reduced image size */
+            gap: 1.2rem;
         }
 
         .movie-poster {
             width: 100%;
             border-radius: 12px;
             object-fit: cover;
+            align-self: start;
+        }
+
+        .modal-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         .modal-details h3 {
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
             color: var(--text-color);
             font-size: 1.1rem;
         }
@@ -424,15 +513,13 @@
         .modal-overview {
             color: var(--hint-color);
             line-height: 1.6;
-            margin-bottom: 1.2rem;
             font-size: 0.9rem;
         }
 
         .ai-insights {
             background: rgba(25, 118, 210, 0.1);
             border-radius: 12px;
-            padding: 1.2rem;
-            margin-bottom: 1.2rem;
+            padding: 1rem;
         }
 
         .ai-insights h4 {
@@ -450,45 +537,40 @@
             font-size: 0.9rem;
         }
 
-        .insight-highlights {
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
-
-        .dark-theme .insight-highlights {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .insight-highlights ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .insight-highlights li {
-            padding: 0.4rem 0;
-            color: var(--hint-color);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-        }
-
-        .insight-highlights li:last-child {
-            border-bottom: none;
-        }
-
-        .insight-highlights li:before {
-            content: "•";
-            color: var(--link-color);
-            font-weight: bold;
-        }
-
         .modal-actions {
             display: flex;
             gap: 0.8rem;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Info Modal */
+        .info-modal .modal-content {
+            max-height: 70vh;
+        }
+
+        .info-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .info-section h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-size: 1.1rem;
+        }
+
+        .info-section p {
+            color: var(--hint-color);
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        .info-note {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
         }
 
         /* Skeleton Loading */
@@ -569,7 +651,7 @@
         @media (max-width: 768px) {
             .modal-body {
                 grid-template-columns: 1fr;
-                gap: 1.2rem;
+                gap: 1rem;
             }
 
             .input-group {
@@ -577,7 +659,7 @@
             }
 
             .movie-poster {
-                max-width: 200px;
+                max-width: 150px;
                 margin: 0 auto;
             }
         }
@@ -615,10 +697,13 @@
 
         <!-- AI Recommendations Section (Moved to top) -->
         <div class="ai-input-section">
-            <h2 class="section-title">
+            <div class="section-title">
                 <i class="fas fa-robot"></i>
                 AI Movie Recommendations
-            </h2>
+                <button class="info-button" id="ai-info-btn">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+            </div>
             
             <div class="input-group">
                 <input 
@@ -681,10 +766,19 @@
 
         <!-- Trending Movies Section (Moved below AI) -->
         <div class="section">
-            <h2 class="section-title">
+            <div class="section-title">
                 <i class="fas fa-fire"></i>
                 Trending Now
-            </h2>
+                <button class="info-button" id="trending-info-btn">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+            </div>
+            
+            <!-- Year Filter -->
+            <div class="year-filter" id="year-filter">
+                <!-- Year buttons will be dynamically added here -->
+            </div>
+            
             <div id="trending" class="cards-container">
                 <!-- Trending movies will be loaded here -->
                 <div class="card skeleton skeleton-card"></div>
@@ -743,12 +837,52 @@
                             <p>Generating AI summary of key events...</p>
                         </div>
                     </div>
-                    
-                    <div class="modal-actions">
-                        <button class="btn" onclick="shareCurrentMovie()">
-                            <i class="fas fa-share"></i> Share Movie
-                        </button>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn" onclick="shareCurrentMovie()">
+                    <i class="fas fa-share"></i> Share Movie
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="modal info-modal">
+        <div class="modal-content">
+            <button class="close-modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2 class="modal-title">About MovieMate</h2>
+            </div>
+            <div class="modal-body">
+                <div class="info-section">
+                    <h3>AI Recommendations</h3>
+                    <p>Our AI analyzes your preferences and searches through thousands of movies to find the perfect matches for you. Just describe what you're looking for, and we'll do the rest!</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3>Movie Information Source</h3>
+                    <p>All movie data is provided by The Movie Database (TMDb). This includes details like ratings, release dates, cast information, and movie summaries.</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3>AI Technology</h3>
+                    <p>We use Google's Gemini AI to generate detailed movie summaries and provide personalized recommendations based on your preferences.</p>
+                    <div class="info-note">
+                        <p><strong>Note:</strong> Our AI is still under development and may require fine-tuning. Some responses might not be perfect yet.</p>
                     </div>
+                </div>
+                
+                <div class="info-section">
+                    <h3>Year Filtering</h3>
+                    <p>Use the year filter buttons to explore movies from different time periods. We automatically show the current year's movies, but you can explore previous and upcoming years too.</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3>Randomizer</h3>
+                    <p>Can't decide what to watch? Use the Randomize button at the bottom to get a surprise selection of movies from different genres and years!</p>
                 </div>
             </div>
         </div>
@@ -773,6 +907,8 @@
         let currentSearchQuery = '';
         let currentMovieForShare = null;
         let clickedCardRect = null;
+        let currentYear = new Date().getFullYear();
+        let selectedYear = currentYear;
 
         // Initialize Telegram Web App
         function initTelegramApp() {
@@ -788,7 +924,7 @@
             // Apply Telegram theme
             applyTelegramTheme();
             
-            // Setup main button
+            // Setup main button for randomization
             setupTelegramMainButton();
             
             // Setup events
@@ -799,6 +935,92 @@
             if (user) {
                 console.log('Telegram User:', user.id, user.first_name);
             }
+        }
+
+        // Setup Telegram Main Button for Randomization
+        function setupTelegramMainButton() {
+            if (!Telegram.MainButton) return;
+            
+            Telegram.MainButton.setText("Randomize")
+                .show()
+                .onClick(() => {
+                    randomizeMovies();
+                    provideHapticFeedback('light');
+                });
+        }
+
+        // Randomize movies function
+        async function randomizeMovies() {
+            // Show loading state
+            showLoading('ai-recommendations');
+            
+            try {
+                // Clear any existing recommendations
+                clearContainer('ai-recommendations');
+                
+                // Get a mix of movies from different genres and years
+                const genres = ['action', 'comedy', 'drama', 'sci-fi', 'thriller'];
+                const randomGenre = genres[Math.floor(Math.random() * genres.length)];
+                
+                // Fetch random movies
+                const randomMovies = await fetchRandomMovies(randomGenre);
+                
+                if (randomMovies.length === 0) {
+                    document.getElementById('ai-recommendations').innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-random"></i>
+                            <h3>No Random Movies Found</h3>
+                            <p>Try again in a moment.</p>
+                        </div>
+                    `;
+                } else {
+                    // Show reason for randomization
+                    document.getElementById('reason-text').textContent = "Here's a random selection of movies from different genres for you to discover something new!";
+                    document.getElementById('ai-reason').style.display = 'block';
+                    
+                    // Display random movies
+                    randomMovies.forEach(movie => {
+                        createCard(movie, 'ai-recommendations', false);
+                    });
+                    
+                    // Show load more button
+                    document.getElementById('load-more-ai').style.display = 'flex';
+                }
+                
+                provideHapticFeedback('success');
+            } catch (error) {
+                console.error('Randomization error:', error);
+                document.getElementById('ai-recommendations').innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Randomization Error</h3>
+                        <p>Unable to get random movies. Please try again later.</p>
+                    </div>
+                `;
+                provideHapticFeedback('error');
+            }
+        }
+
+        // Fetch random movies
+        async function fetchRandomMovies(genre = null) {
+            // Use a random page to get different results each time
+            const randomPage = Math.floor(Math.random() * 10) + 1;
+            
+            if (genre) {
+                return await fetchMoviesByCategory(genre, randomPage);
+            } else {
+                return await fetchTrendingMovies(randomPage);
+            }
+        }
+
+        // Setup Telegram Events
+        function setupTelegramEvents() {
+            if (!Telegram.onEvent) return;
+            
+            Telegram.onEvent('themeChanged', applyTelegramTheme);
+            Telegram.onEvent('viewportChanged', () => {
+                setTimeout(() => Telegram.expand(), 100);
+            });
         }
 
         // Apply Telegram theme colors
@@ -833,31 +1055,95 @@
             }
         }
 
-        // Setup Telegram Main Button
-        function setupTelegramMainButton() {
-            if (!Telegram.MainButton) return;
+        // Initialize year filter buttons
+        function initYearFilter() {
+            const yearFilter = document.getElementById('year-filter');
+            yearFilter.innerHTML = '';
             
-            Telegram.MainButton.setText("Get Recommendations")
-                .show()
-                .onClick(() => {
-                    const prompt = document.getElementById('ai-prompt-input').value.trim();
-                    if (prompt || currentCategory) {
-                        performAIRecommendations(prompt, currentCategory);
-                        provideHapticFeedback('light');
-                    } else {
-                        showTelegramAlert('Please enter a description or select a category');
-                    }
+            // Create buttons for previous year, current year, and next 2 years
+            const years = [
+                currentYear - 1,
+                currentYear,
+                currentYear + 1,
+                currentYear + 2
+            ];
+            
+            years.forEach(year => {
+                const button = document.createElement('button');
+                button.className = `year-btn ${year === selectedYear ? 'active' : ''}`;
+                button.textContent = year;
+                button.setAttribute('data-year', year);
+                
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.year-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Set selected year
+                    selectedYear = year;
+                    
+                    // Reload trending movies with the selected year
+                    loadTrendingMoviesByYear();
                 });
+                
+                yearFilter.appendChild(button);
+            });
         }
 
-        // Setup Telegram Events
-        function setupTelegramEvents() {
-            if (!Telegram.onEvent) return;
+        // Load trending movies by selected year
+        async function loadTrendingMoviesByYear() {
+            showLoading('trending');
+            trendingPage = 1;
             
-            Telegram.onEvent('themeChanged', applyTelegramTheme);
-            Telegram.onEvent('viewportChanged', () => {
-                setTimeout(() => Telegram.expand(), 100);
-            });
+            try {
+                const movies = await fetchMoviesByYear(selectedYear, trendingPage);
+                
+                clearContainer('trending');
+                
+                if (movies.length === 0) {
+                    document.getElementById('trending').innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-film"></i>
+                            <h3>No Movies Found</h3>
+                            <p>No trending movies found for ${selectedYear}.</p>
+                        </div>
+                    `;
+                } else {
+                    movies.forEach(movie => {
+                        createCard(movie, 'trending', true);
+                    });
+                    
+                    document.getElementById('load-more-trending').style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Error loading movies by year:', error);
+                document.getElementById('trending').innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Loading Error</h3>
+                        <p>Unable to load movies. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Fetch movies by year
+        async function fetchMoviesByYear(year, page = 1) {
+            // For current year, use trending
+            if (year === currentYear) {
+                return await fetchTrendingMovies(page);
+            }
+            
+            // For other years, use discover with release year filter
+            const data = await fetchFromTMDB(`/discover/movie?primary_release_year=${year}&sort_by=popularity.desc&page=${page}`);
+            if (data && data.results) {
+                return data.results;
+            }
+            return [];
         }
 
         // Enhanced AI Search with better understanding
@@ -1439,7 +1725,7 @@
             
             try {
                 trendingPage++;
-                const additionalMovies = await fetchTrendingMovies(trendingPage);
+                const additionalMovies = await fetchMoviesByYear(selectedYear, trendingPage);
                 
                 if (additionalMovies.length > 0) {
                     additionalMovies.forEach(movie => {
@@ -1486,8 +1772,11 @@
         // Initialize the page with data
         async function initializePage() {
             try {
+                // Initialize year filter
+                initYearFilter();
+                
                 // Fetch data from TMDB
-                const trendingData = await fetchTrendingMovies();
+                const trendingData = await fetchMoviesByYear(selectedYear);
                 const upcomingData = await fetchUpcomingMovies();
                 
                 // Clear loading indicators and populate with real data
@@ -1522,14 +1811,26 @@
             }
         }
 
-        // Close modal function
-        function closeModal() {
-            const modal = document.getElementById('movie-modal');
-            modal.classList.remove('show');
+        // Open info modal
+        function openInfoModal() {
+            const modal = document.getElementById('info-modal');
+            modal.style.display = 'block';
             
             setTimeout(() => {
-                modal.style.display = 'none';
-            }, 300);
+                modal.classList.add('show');
+            }, 10);
+        }
+
+        // Close modal function
+        function closeModal() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                modal.classList.remove('show');
+                
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            });
         }
 
         // Event listeners
@@ -1567,6 +1868,10 @@
                 });
             });
             
+            // Info buttons
+            document.getElementById('ai-info-btn').addEventListener('click', openInfoModal);
+            document.getElementById('trending-info-btn').addEventListener('click', openInfoModal);
+            
             // Load more buttons
             document.getElementById('load-more-trending').addEventListener('click', loadMoreTrending);
             document.getElementById('load-more-ai').addEventListener('click', loadMoreAI);
@@ -1577,7 +1882,7 @@
             });
             
             window.addEventListener('click', function(event) {
-                if (event.target === document.getElementById('movie-modal')) {
+                if (event.target.classList.contains('modal')) {
                     closeModal();
                 }
             });
