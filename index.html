@@ -8,14 +8,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --telegram-bg-color: #1a1a1a;
-            --telegram-text-color: #ffffff;
-            --telegram-hint-color: #aaaaaa;
-            --telegram-link-color: #3390ec;
-            --telegram-button-color: #3390ec;
-            --telegram-button-text-color: #ffffff;
-            --telegram-secondary-bg: #2b2b2b;
-            --telegram-section-bg: #2d2d2d;
+            /* Light theme variables */
+            --bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --hint-color: #666666;
+            --link-color: #1976d2;
+            --button-color: #1976d2;
+            --button-text-color: #ffffff;
+            --secondary-bg: #f5f5f5;
+            --section-bg: #f8f9fa;
+            --border-color: #e0e0e0;
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-theme {
+            /* Dark theme variables */
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --hint-color: #aaaaaa;
+            --link-color: #90caf9;
+            --button-color: #1976d2;
+            --button-text-color: #ffffff;
+            --secondary-bg: #1e1e1e;
+            --section-bg: #2d2d2d;
+            --border-color: #333333;
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         * {
@@ -26,10 +43,11 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--telegram-bg-color);
-            color: var(--telegram-text-color);
+            background: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
             padding: 16px;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .container {
@@ -46,54 +64,62 @@
         .header h1 {
             font-size: 2rem;
             margin-bottom: 0.5rem;
-            color: var(--telegram-text-color);
+            color: var(--text-color);
         }
 
         .header p {
-            color: var(--telegram-hint-color);
+            color: var(--hint-color);
             font-size: 1.1rem;
         }
 
         .section {
-            background: var(--telegram-section-bg);
+            background: var(--section-bg);
             border-radius: 16px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
         }
 
         .section-title {
             font-size: 1.4rem;
             margin-bottom: 1rem;
-            color: var(--telegram-text-color);
+            color: var(--text-color);
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
         .section-title i {
-            color: var(--telegram-link-color);
+            color: var(--link-color);
         }
 
-        /* Cards Grid */
+        /* Cards Grid - Always 2 columns */
         .cards-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
             margin-bottom: 1.5rem;
         }
 
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .card {
-            background: var(--telegram-secondary-bg);
+            background: var(--secondary-bg);
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
             transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
         }
 
         .card:hover {
             transform: translateY(-4px);
-            border-color: var(--telegram-link-color);
+            border-color: var(--link-color);
         }
 
         .card-img {
@@ -109,7 +135,7 @@
         .card-title {
             font-size: 1.1rem;
             margin-bottom: 0.5rem;
-            color: var(--telegram-text-color);
+            color: var(--text-color);
             line-height: 1.4;
         }
 
@@ -119,7 +145,7 @@
             align-items: center;
             margin-bottom: 0.75rem;
             font-size: 0.9rem;
-            color: var(--telegram-hint-color);
+            color: var(--hint-color);
         }
 
         .rating {
@@ -147,7 +173,7 @@
         }
 
         .card-description {
-            color: var(--telegram-hint-color);
+            color: var(--hint-color);
             font-size: 0.9rem;
             line-height: 1.5;
             margin-bottom: 1rem;
@@ -179,13 +205,17 @@
         }
 
         .card-action.primary {
-            background: var(--telegram-button-color);
-            color: var(--telegram-button-text-color);
+            background: var(--button-color);
+            color: var(--button-text-color);
         }
 
         .card-action:not(.primary) {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text-color);
+        }
+
+        .dark-theme .card-action:not(.primary) {
             background: rgba(255, 255, 255, 0.1);
-            color: var(--telegram-text-color);
         }
 
         .card-action:active {
@@ -195,7 +225,7 @@
 
         /* AI Recommendations Section */
         .ai-input-section {
-            background: var(--telegram-section-bg);
+            background: var(--section-bg);
             border-radius: 16px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
@@ -210,21 +240,21 @@
         .ai-input {
             flex: 1;
             padding: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
-            background: var(--telegram-secondary-bg);
-            color: var(--telegram-text-color);
+            background: var(--secondary-bg);
+            color: var(--text-color);
             font-size: 1rem;
         }
 
         .ai-input::placeholder {
-            color: var(--telegram-hint-color);
+            color: var(--hint-color);
         }
 
         .btn {
             padding: 1rem 1.5rem;
-            background: var(--telegram-button-color);
-            color: var(--telegram-button-text-color);
+            background: var(--button-color);
+            color: var(--button-text-color);
             border: none;
             border-radius: 12px;
             font-size: 1rem;
@@ -257,9 +287,9 @@
 
         .category-btn {
             padding: 0.75rem 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--telegram-text-color);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
             border-radius: 20px;
             font-size: 0.9rem;
             cursor: pointer;
@@ -267,10 +297,14 @@
             min-height: 44px;
         }
 
+        .dark-theme .category-btn {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
         .category-btn.active {
-            background: var(--telegram-button-color);
-            border-color: var(--telegram-button-color);
-            color: var(--telegram-button-text-color);
+            background: var(--button-color);
+            border-color: var(--button-color);
+            color: var(--button-text-color);
         }
 
         .category-btn:active {
@@ -278,8 +312,8 @@
         }
 
         .ai-reason {
-            background: rgba(51, 144, 236, 0.1);
-            border: 1px solid rgba(51, 144, 236, 0.3);
+            background: rgba(25, 118, 210, 0.1);
+            border: 1px solid rgba(25, 118, 210, 0.3);
             border-radius: 12px;
             padding: 1rem;
             margin-bottom: 1rem;
@@ -287,7 +321,7 @@
         }
 
         .ai-reason p {
-            color: var(--telegram-text-color);
+            color: var(--text-color);
             font-size: 0.95rem;
             line-height: 1.5;
         }
@@ -301,9 +335,9 @@
 
         .load-more-btn {
             padding: 1rem 2rem;
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--telegram-text-color);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             font-size: 1rem;
             cursor: pointer;
@@ -312,6 +346,10 @@
             align-items: center;
             gap: 0.5rem;
             min-height: 44px;
+        }
+
+        .dark-theme .load-more-btn {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .load-more-btn:active {
@@ -338,24 +376,24 @@
         }
 
         .modal-content {
-            background: var(--telegram-bg-color);
+            background: var(--bg-color);
             margin: 2rem auto;
             border-radius: 16px;
             max-width: 800px;
             position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
         }
 
         .close-modal {
             position: absolute;
             top: 1rem;
             right: 1rem;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.1);
             border: none;
             border-radius: 50%;
             width: 44px;
             height: 44px;
-            color: var(--telegram-text-color);
+            color: var(--text-color);
             font-size: 1.2rem;
             cursor: pointer;
             display: flex;
@@ -366,19 +404,19 @@
 
         .modal-header {
             padding: 2rem 2rem 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .modal-title {
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
-            color: var(--telegram-text-color);
+            color: var(--text-color);
         }
 
         .modal-meta {
             display: flex;
             gap: 1rem;
-            color: var(--telegram-hint-color);
+            color: var(--hint-color);
             font-size: 0.9rem;
             margin-bottom: 1rem;
         }
@@ -398,24 +436,24 @@
 
         .modal-details h3 {
             margin-bottom: 1rem;
-            color: var(--telegram-text-color);
+            color: var(--text-color);
         }
 
         .modal-overview {
-            color: var(--telegram-hint-color);
+            color: var(--hint-color);
             line-height: 1.6;
             margin-bottom: 1.5rem;
         }
 
         .ai-insights {
-            background: rgba(51, 144, 236, 0.1);
+            background: rgba(25, 118, 210, 0.1);
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
         }
 
         .ai-insights h4 {
-            color: var(--telegram-text-color);
+            color: var(--text-color);
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
@@ -423,9 +461,13 @@
         }
 
         .insight-highlights {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.05);
             border-radius: 8px;
             padding: 1rem;
+        }
+
+        .dark-theme .insight-highlights {
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .insight-highlights ul {
@@ -435,8 +477,8 @@
 
         .insight-highlights li {
             padding: 0.5rem 0;
-            color: var(--telegram-hint-color);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--hint-color);
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -448,7 +490,7 @@
 
         .insight-highlights li:before {
             content: "•";
-            color: var(--telegram-link-color);
+            color: var(--link-color);
             font-weight: bold;
         }
 
@@ -459,10 +501,14 @@
 
         /* Skeleton Loading */
         .skeleton {
-            background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
+            background: linear-gradient(90deg, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.05) 75%);
             background-size: 200% 100%;
             animation: loading 1.5s infinite;
             border-radius: 12px;
+        }
+
+        .dark-theme .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
         }
 
         .skeleton-card {
@@ -480,9 +526,9 @@
 
         /* Spinner */
         .spinner {
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(0, 0, 0, 0.2);
             border-radius: 50%;
-            border-top: 2px solid var(--telegram-button-color);
+            border-top: 2px solid var(--button-color);
             width: 16px;
             height: 16px;
             animation: spin 1s linear infinite;
@@ -496,8 +542,8 @@
         /* Share Tooltip */
         .share-tooltip {
             position: fixed;
-            background: var(--telegram-button-color);
-            color: var(--telegram-button-text-color);
+            background: var(--button-color);
+            color: var(--button-text-color);
             padding: 0.75rem 1rem;
             border-radius: 8px;
             font-size: 0.9rem;
@@ -517,7 +563,7 @@
         .empty-state, .error-state {
             text-align: center;
             padding: 3rem 2rem;
-            color: var(--telegram-hint-color);
+            color: var(--hint-color);
             grid-column: 1 / -1;
         }
 
@@ -529,10 +575,6 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .cards-container {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-
             .modal-body {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
@@ -549,10 +591,6 @@
         }
 
         @media (max-width: 480px) {
-            .cards-container {
-                grid-template-columns: 1fr;
-            }
-
             .section {
                 padding: 1rem;
             }
@@ -575,27 +613,7 @@
             <p>AI-Powered Movie Recommendations in Telegram</p>
         </div>
 
-        <!-- Trending Movies Section -->
-        <div class="section">
-            <h2 class="section-title">
-                <i class="fas fa-fire"></i>
-                Trending Now
-            </h2>
-            <div id="trending" class="cards-container">
-                <!-- Trending movies will be loaded here -->
-                <div class="card skeleton skeleton-card"></div>
-                <div class="card skeleton skeleton-card"></div>
-                <div class="card skeleton skeleton-card"></div>
-                <div class="card skeleton skeleton-card"></div>
-            </div>
-            <div class="load-more">
-                <button id="load-more-trending" class="load-more-btn">
-                    <i class="fas fa-plus"></i> Load More Trending Movies
-                </button>
-            </div>
-        </div>
-
-        <!-- AI Recommendations Section -->
+        <!-- AI Recommendations Section (Moved to top) -->
         <div class="ai-input-section">
             <h2 class="section-title">
                 <i class="fas fa-robot"></i>
@@ -657,6 +675,26 @@
             <div class="load-more">
                 <button id="load-more-ai" class="load-more-btn" style="display: none;">
                     <i class="fas fa-plus"></i> Load More Recommendations
+                </button>
+            </div>
+        </div>
+
+        <!-- Trending Movies Section (Moved below AI) -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-fire"></i>
+                Trending Now
+            </h2>
+            <div id="trending" class="cards-container">
+                <!-- Trending movies will be loaded here -->
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+            </div>
+            <div class="load-more">
+                <button id="load-more-trending" class="load-more-btn">
+                    <i class="fas fa-plus"></i> Load More Trending Movies
                 </button>
             </div>
         </div>
@@ -770,14 +808,33 @@
         // Apply Telegram theme colors
         function applyTelegramTheme() {
             const themeParams = Telegram.themeParams || {};
+            const isDarkMode = themeParams.bg_color ? 
+                themeParams.bg_color !== '#ffffff' && themeParams.bg_color !== '#f5f5f5' : 
+                window.matchMedia('(prefers-color-scheme: dark)').matches;
             
-            // Update CSS variables
-            document.documentElement.style.setProperty('--telegram-bg-color', themeParams.bg_color || '#1a1a1a');
-            document.documentElement.style.setProperty('--telegram-text-color', themeParams.text_color || '#ffffff');
-            document.documentElement.style.setProperty('--telegram-hint-color', themeParams.hint_color || '#aaaaaa');
-            document.documentElement.style.setProperty('--telegram-link-color', themeParams.link_color || '#3390ec');
-            document.documentElement.style.setProperty('--telegram-button-color', themeParams.button_color || '#3390ec');
-            document.documentElement.style.setProperty('--telegram-button-text-color', themeParams.button_text_color || '#ffffff');
+            // Apply dark or light theme
+            if (isDarkMode) {
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.remove('dark-theme');
+            }
+            
+            // Update CSS variables based on theme
+            if (isDarkMode) {
+                document.documentElement.style.setProperty('--bg-color', themeParams.bg_color || '#121212');
+                document.documentElement.style.setProperty('--text-color', themeParams.text_color || '#ffffff');
+                document.documentElement.style.setProperty('--hint-color', themeParams.hint_color || '#aaaaaa');
+                document.documentElement.style.setProperty('--link-color', themeParams.link_color || '#90caf9');
+                document.documentElement.style.setProperty('--button-color', themeParams.button_color || '#1976d2');
+                document.documentElement.style.setProperty('--button-text-color', themeParams.button_text_color || '#ffffff');
+            } else {
+                document.documentElement.style.setProperty('--bg-color', themeParams.bg_color || '#ffffff');
+                document.documentElement.style.setProperty('--text-color', themeParams.text_color || '#1a1a1a');
+                document.documentElement.style.setProperty('--hint-color', themeParams.hint_color || '#666666');
+                document.documentElement.style.setProperty('--link-color', themeParams.link_color || '#1976d2');
+                document.documentElement.style.setProperty('--button-color', themeParams.button_color || '#1976d2');
+                document.documentElement.style.setProperty('--button-text-color', themeParams.button_text_color || '#ffffff');
+            }
         }
 
         // Setup Telegram Main Button
@@ -805,6 +862,81 @@
             Telegram.onEvent('viewportChanged', () => {
                 setTimeout(() => Telegram.expand(), 100);
             });
+        }
+
+        // Enhanced AI Search with better understanding
+        function parseUserInput(input) {
+            const normalizedInput = input.toLowerCase().trim();
+            
+            // Genre mapping
+            const genreKeywords = {
+                'action': ['action', 'fight', 'battle', 'explosion', 'adventure', 'thrilling', 'exciting', 'fast-paced'],
+                'comedy': ['comedy', 'funny', 'humor', 'laugh', 'hilarious', 'lighthearted', 'satire'],
+                'drama': ['drama', 'emotional', 'serious', 'intense', 'character-driven', 'thought-provoking', 'touching'],
+                'sci-fi': ['sci-fi', 'science fiction', 'futuristic', 'space', 'alien', 'technology', 'cyberpunk', 'dystopian'],
+                'thriller': ['thriller', 'suspense', 'mystery', 'tense', 'edge of seat', 'psychological'],
+                'romance': ['romance', 'love', 'relationship', 'romantic', 'heartwarming', 'couple'],
+                'horror': ['horror', 'scary', 'frightening', 'terror', 'supernatural', 'ghost', 'monster'],
+                'animation': ['animation', 'animated', 'cartoon', 'family', 'kids', 'children']
+            };
+            
+            // Mood/theme mapping
+            const moodKeywords = {
+                'upbeat': ['happy', 'upbeat', 'positive', 'feel-good', 'inspiring', 'uplifting'],
+                'dark': ['dark', 'gritty', 'bleak', 'disturbing', 'tragic', 'sad'],
+                'thoughtful': ['thoughtful', 'philosophical', 'deep', 'meaningful', 'reflective'],
+                'light': ['light', 'fun', 'entertaining', 'easy', 'relaxing', 'casual']
+            };
+            
+            // Era mapping
+            const eraKeywords = {
+                'classic': ['classic', 'old', 'vintage', 'retro', 'nostalgic', 'golden age'],
+                'modern': ['modern', 'recent', 'contemporary', 'current', 'today', 'present'],
+                'period': ['period', 'historical', 'ancient', 'medieval', 'victorian', 'old-fashioned']
+            };
+            
+            // Parse the input
+            const result = {
+                genres: [],
+                moods: [],
+                eras: [],
+                keywords: []
+            };
+            
+            // Extract genres
+            for (const [genre, keywords] of Object.entries(genreKeywords)) {
+                if (keywords.some(keyword => normalizedInput.includes(keyword))) {
+                    result.genres.push(genre);
+                }
+            }
+            
+            // Extract moods
+            for (const [mood, keywords] of Object.entries(moodKeywords)) {
+                if (keywords.some(keyword => normalizedInput.includes(keyword))) {
+                    result.moods.push(mood);
+                }
+            }
+            
+            // Extract eras
+            for (const [era, keywords] of Object.entries(eraKeywords)) {
+                if (keywords.some(keyword => normalizedInput.includes(keyword))) {
+                    result.eras.push(era);
+                }
+            }
+            
+            // Extract remaining keywords (excluding stop words)
+            const stopWords = ['movie', 'film', 'watch', 'see', 'like', 'want', 'looking', 'for', 'a', 'an', 'the', 'and', 'or', 'but'];
+            const words = normalizedInput.split(/\s+/).filter(word => 
+                word.length > 2 && !stopWords.includes(word)
+            );
+            
+            result.keywords = words.filter(word => 
+                !Object.values(genreKeywords).flat().includes(word) &&
+                !Object.values(moodKeywords).flat().includes(word) &&
+                !Object.values(eraKeywords).flat().includes(word)
+            );
+            
+            return result;
         }
 
         // Enhanced AI Insights Generator
@@ -931,13 +1063,15 @@
                 
                 // Add prompt-specific context
                 if (prompt && prompt.length > 0) {
-                    if (prompt.includes('emotional') || prompt.includes('drama')) {
+                    const parsedInput = parseUserInput(prompt);
+                    
+                    if (parsedInput.moods.includes('emotional') || parsedInput.keywords.some(k => k.includes('emotional'))) {
                         template.main += ` Perfect for viewers seeking an emotionally engaging experience.`;
                     }
-                    if (prompt.includes('funny') || prompt.includes('comedy')) {
+                    if (parsedInput.moods.includes('upbeat') || parsedInput.keywords.some(k => k.includes('funny') || k.includes('comedy'))) {
                         template.main += ` Delivers the laughs and entertainment you're looking for.`;
                     }
-                    if (prompt.includes('action') || prompt.includes('thrilling')) {
+                    if (parsedInput.genres.includes('action') || parsedInput.keywords.some(k => k.includes('action') || k.includes('thrilling'))) {
                         template.main += ` Packed with the excitement and energy that action fans crave.`;
                     }
                 }
@@ -1006,7 +1140,67 @@
             return [];
         }
 
-        // Search movies
+        // Enhanced search with better understanding
+        async function searchTMDBWithAI(prompt, page = 1) {
+            // Parse user input to understand intent
+            const parsedInput = parseUserInput(prompt);
+            
+            let movies = [];
+            
+            // If we detected specific genres, use genre-based search
+            if (parsedInput.genres.length > 0) {
+                for (const genre of parsedInput.genres) {
+                    const genreMovies = await fetchMoviesByCategory(genre, page);
+                    movies = [...movies, ...genreMovies];
+                }
+                
+                // Remove duplicates
+                const movieIds = new Set();
+                movies = movies.filter(movie => {
+                    if (movieIds.has(movie.id)) return false;
+                    movieIds.add(movie.id);
+                    return true;
+                });
+            }
+            
+            // If we didn't get enough results or no specific genres were detected, use keyword search
+            if (movies.length < 6) {
+                // Build a better search query based on parsed input
+                let searchQuery = prompt;
+                
+                // If we have specific keywords, use them for search
+                if (parsedInput.keywords.length > 0) {
+                    searchQuery = parsedInput.keywords.join(' ');
+                }
+                
+                // Add genre terms if we have them
+                if (parsedInput.genres.length > 0) {
+                    searchQuery += ' ' + parsedInput.genres.join(' ');
+                }
+                
+                const keywordResults = await searchTMDB(searchQuery, page);
+                movies = [...movies, ...keywordResults];
+                
+                // Remove duplicates again
+                const movieIds = new Set();
+                movies = movies.filter(movie => {
+                    if (movieIds.has(movie.id)) return false;
+                    movieIds.add(movie.id);
+                    return true;
+                });
+            }
+            
+            // Sort by relevance (rating and popularity)
+            movies.sort((a, b) => {
+                const aScore = (a.vote_average || 0) * (a.popularity || 0);
+                const bScore = (b.vote_average || 0) * (b.popularity || 0);
+                return bScore - aScore;
+            });
+            
+            return movies.slice(0, 12); // Limit results
+        }
+
+        // Original search function (kept for compatibility)
         async function searchTMDB(query, page = 1) {
             const data = await fetchFromTMDB(`/search/movie?query=${encodeURIComponent(query)}&page=${page}`);
             if (data && data.results) {
@@ -1022,19 +1216,45 @@
 
         // Generate AI recommendation reason
         function generateAIReason(prompt, category) {
-            const reasons = {
-                'action': `Based on your interest in action films, I've selected movies with thrilling sequences, dynamic stunts, and high-energy plots that deliver excitement from start to finish.`,
-                'comedy': `For your comedy request, I've picked films known for their clever humor, memorable one-liners, and situations that will keep you laughing throughout.`,
-                'drama': `These dramatic selections feature compelling character development, emotional storytelling, and thought-provoking themes that resonate with viewers.`,
-                'sci-fi': `Your sci-fi preference led me to choose films with imaginative worlds, futuristic technology, and explorations of what might be possible in the years to come.`,
-                'thriller': `For thriller enthusiasts, these movies build suspense masterfully, with twists and turns that will keep you on the edge of your seat until the very end.`,
-                'romance': `These romantic selections capture the complexity of relationships with heartfelt moments, chemistry between leads, and stories that celebrate human connection.`,
-                'horror': `Based on your interest in horror, I've selected films that effectively build tension, create unsettling atmospheres, and deliver genuine scares.`,
-                'animation': `These animated films showcase stunning visual artistry, creative storytelling, and universal themes that appeal to viewers of all ages.`,
-                'default': `Based on your request for "${prompt}", I've selected films that match your description with compelling storytelling and high audience ratings.`
-            };
+            const parsedInput = parseUserInput(prompt);
             
-            return reasons[category] || reasons['default'];
+            if (category) {
+                const reasons = {
+                    'action': `Based on your interest in action films, I've selected movies with thrilling sequences, dynamic stunts, and high-energy plots that deliver excitement from start to finish.`,
+                    'comedy': `For your comedy request, I've picked films known for their clever humor, memorable one-liners, and situations that will keep you laughing throughout.`,
+                    'drama': `These dramatic selections feature compelling character development, emotional storytelling, and thought-provoking themes that resonate with viewers.`,
+                    'sci-fi': `Your sci-fi preference led me to choose films with imaginative worlds, futuristic technology, and explorations of what might be possible in the years to come.`,
+                    'thriller': `For thriller enthusiasts, these movies build suspense masterfully, with twists and turns that will keep you on the edge of your seat until the very end.`,
+                    'romance': `These romantic selections capture the complexity of relationships with heartfelt moments, chemistry between leads, and stories that celebrate human connection.`,
+                    'horror': `Based on your interest in horror, I've selected films that effectively build tension, create unsettling atmospheres, and deliver genuine scares.`,
+                    'animation': `These animated films showcase stunning visual artistry, creative storytelling, and universal themes that appeal to viewers of all ages.`
+                };
+                
+                return reasons[category] || `Based on your request for "${prompt}", I've selected films that match your description with compelling storytelling and high audience ratings.`;
+            }
+            
+            // Build a more personalized reason based on parsed input
+            let reason = "Based on your request";
+            
+            if (parsedInput.genres.length > 0) {
+                reason += ` for ${parsedInput.genres.join(' and ')} films`;
+            }
+            
+            if (parsedInput.moods.length > 0) {
+                reason += ` with a ${parsedInput.moods.join(' and ')} tone`;
+            }
+            
+            if (parsedInput.eras.length > 0) {
+                reason += ` from the ${parsedInput.eras.join(' or ')} era`;
+            }
+            
+            if (parsedInput.keywords.length > 0) {
+                reason += ` featuring ${parsedInput.keywords.join(', ')}`;
+            }
+            
+            reason += ", I've selected films that match your interests with compelling storytelling and high audience ratings.";
+            
+            return reason;
         }
 
         // Create card for movie
@@ -1246,7 +1466,7 @@
             }
         }
 
-        // Enhanced AI recommendations
+        // Enhanced AI recommendations with better search
         async function performAIRecommendations(prompt, category = '', loadMore = false) {
             if (!loadMore) {
                 showLoading('ai-recommendations');
@@ -1267,7 +1487,8 @@
                     currentCategory = category;
                     currentSearchQuery = '';
                 } else if (prompt) {
-                    movies = await searchTMDB(prompt, aiPage);
+                    // Use enhanced AI search
+                    movies = await searchTMDBWithAI(prompt, aiPage);
                     currentSearchQuery = prompt;
                     currentCategory = '';
                 } else {
@@ -1301,7 +1522,7 @@
                         provideHapticFeedback('success');
                     }
                     
-                    // Display recommendations
+                    // Display recommendations (always 2 columns)
                     movies.forEach(movie => {
                         createCard(movie, 'ai-recommendations', false);
                     });
