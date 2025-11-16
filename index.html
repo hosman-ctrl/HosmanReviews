@@ -3,113 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Latest Movies on Hosman - AI-Powered Movie Discovery</title>
-    <meta name="description" content="Discover your next favorite movie with AI-powered recommendations. Get personalized movie suggestions based on your preferences and join our Telegram community for reviews.">
-    <meta name="keywords" content="movies, film recommendations, AI movie suggestions, Telegram movie reviews, latest films">
-    <meta name="author" content="Hosman Reviews">
-    
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    
+    <title>MovieMate - Telegram Web App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #0088cc;
-            --primary-dark: #006699;
-            --telegram-bg: #18222d;
-            --telegram-card: #242f3d;
-            --telegram-text: #e1e1e1;
-            --telegram-secondary: #8a8a8e;
-            --telegram-border: #2a3b4d;
-            --telegram-hover: #2d3e52;
+            --telegram-bg-color: #1a1a1a;
+            --telegram-text-color: #ffffff;
+            --telegram-hint-color: #aaaaaa;
+            --telegram-link-color: #3390ec;
+            --telegram-button-color: #3390ec;
+            --telegram-button-text-color: #ffffff;
+            --telegram-secondary-bg: #2b2b2b;
+            --telegram-section-bg: #2d2d2d;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
 
         body {
-            background-color: var(--telegram-bg);
-            color: var(--telegram-text);
-            line-height: 1.5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--telegram-bg-color);
+            color: var(--telegram-text-color);
+            line-height: 1.6;
+            padding: 16px;
         }
 
-        /* Logo Section */
-        .logo-section {
-            display: flex;
-            justify-content: center;
-            padding: 1.5rem 1rem 1rem;
-        }
-
-        .logo-container {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Main Content */
-        main {
+        .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1rem 1.5rem 2rem;
         }
 
-        /* Sections */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--telegram-text-color);
+        }
+
+        .header p {
+            color: var(--telegram-hint-color);
+            font-size: 1.1rem;
+        }
+
+        .section {
+            background: var(--telegram-section-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         .section-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.2rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--telegram-border);
-        }
-
-        .section-title h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .view-all {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--telegram-text-color);
             display: flex;
             align-items: center;
-            gap: 0.3rem;
-            font-size: 0.9rem;
+            gap: 0.5rem;
         }
 
+        .section-title i {
+            color: var(--telegram-link-color);
+        }
+
+        /* Cards Grid */
         .cards-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1.2rem;
-            margin-bottom: 2.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .card {
-            background-color: var(--telegram-card);
+            background: var(--telegram-secondary-bg);
             border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid var(--telegram-border);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-4px);
+            border-color: var(--telegram-link-color);
         }
 
         .card-img {
             width: 100%;
-            height: 280px;
+            height: 300px;
             object-fit: cover;
         }
 
@@ -118,381 +107,384 @@
         }
 
         .card-title {
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin-bottom: 0.5rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-weight: 600;
+            color: var(--telegram-text-color);
+            line-height: 1.4;
         }
 
         .card-meta {
             display: flex;
             justify-content: space-between;
-            color: var(--telegram-secondary);
-            font-size: 0.85rem;
-            margin-bottom: 0.8rem;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--telegram-hint-color);
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .rating.high {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .rating.medium {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+        }
+
+        .rating.low {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
         }
 
         .card-description {
-            font-size: 0.85rem;
-            color: var(--telegram-secondary);
+            color: var(--telegram-hint-color);
+            font-size: 0.9rem;
+            line-height: 1.5;
             margin-bottom: 1rem;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            line-height: 1.4;
         }
 
         .card-actions {
             display: flex;
-            justify-content: space-between;
+            gap: 0.5rem;
         }
 
         .card-action {
-            background: transparent;
+            flex: 1;
+            padding: 0.75rem 1rem;
             border: none;
-            color: var(--telegram-secondary);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 0.3rem;
-            font-size: 0.85rem;
-            transition: color 0.3s;
-            padding: 0.3rem 0.5rem;
-            border-radius: 6px;
+            justify-content: center;
+            gap: 0.5rem;
+            min-height: 44px;
         }
 
-        .card-action:hover {
-            color: var(--primary);
-            background-color: rgba(0, 136, 204, 0.1);
+        .card-action.primary {
+            background: var(--telegram-button-color);
+            color: var(--telegram-button-text-color);
         }
 
-        .share-btn {
-            background: transparent;
-            border: none;
-            color: var(--telegram-secondary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            font-size: 0.85rem;
-            transition: color 0.3s;
-            padding: 0.3rem 0.5rem;
-            border-radius: 6px;
+        .card-action:not(.primary) {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--telegram-text-color);
         }
 
-        .share-btn:hover {
-            color: var(--primary);
-            background-color: rgba(0, 136, 204, 0.1);
+        .card-action:active {
+            transform: scale(0.95);
+            opacity: 0.8;
         }
 
-        /* AI Recommendations */
-        .ai-recommendations-container {
-            margin-bottom: 2.5rem;
-        }
-
-        .ai-prompt-section {
-            background-color: var(--telegram-card);
-            border-radius: 12px;
+        /* AI Recommendations Section */
+        .ai-input-section {
+            background: var(--telegram-section-bg);
+            border-radius: 16px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            border: 1px solid var(--telegram-border);
         }
 
-        .ai-prompt-section h3 {
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
+        .input-group {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .prompt-input {
-            display: flex;
-            gap: 0.8rem;
+            gap: 0.75rem;
             margin-bottom: 1rem;
         }
 
-        .prompt-input input {
+        .ai-input {
             flex: 1;
-            background-color: var(--telegram-bg);
-            border: 1px solid var(--telegram-border);
-            border-radius: 20px;
-            padding: 0.8rem 1rem;
-            color: var(--telegram-text);
-            outline: none;
-            font-size: 0.95rem;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: var(--telegram-secondary-bg);
+            color: var(--telegram-text-color);
+            font-size: 1rem;
         }
 
-        .prompt-input input:focus {
-            border-color: var(--primary);
+        .ai-input::placeholder {
+            color: var(--telegram-hint-color);
         }
 
         .btn {
-            padding: 0.7rem 1.5rem;
-            border-radius: 20px;
+            padding: 1rem 1.5rem;
+            background: var(--telegram-button-color);
+            color: var(--telegram-button-text-color);
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-            border: none;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            min-height: 44px;
         }
 
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
+        .btn:active {
+            transform: scale(0.95);
+            opacity: 0.8;
         }
 
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        .category-buttons {
+        .categories {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.8rem;
-            margin-top: 1rem;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
         .category-btn {
-            background-color: var(--telegram-bg);
-            color: var(--telegram-text);
-            border: 1px solid var(--telegram-border);
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--telegram-text-color);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 20px;
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .category-btn:hover {
-            background-color: var(--telegram-hover);
+            transition: all 0.2s ease;
+            min-height: 44px;
         }
 
         .category-btn.active {
-            background-color: var(--primary);
-            color: white;
-            border-color: var(--primary);
+            background: var(--telegram-button-color);
+            border-color: var(--telegram-button-color);
+            color: var(--telegram-button-text-color);
+        }
+
+        .category-btn:active {
+            transform: scale(0.95);
         }
 
         .ai-reason {
-            background-color: rgba(0, 136, 204, 0.1);
-            border-radius: 10px;
+            background: rgba(51, 144, 236, 0.1);
+            border: 1px solid rgba(51, 144, 236, 0.3);
+            border-radius: 12px;
             padding: 1rem;
-            margin-top: 1rem;
-            border-left: 3px solid var(--primary);
-            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
         }
 
-        .ai-reason h4 {
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--primary);
-        }
-
-        /* Upcoming Movies */
-        .upcoming-movies {
-            margin-bottom: 2.5rem;
+        .ai-reason p {
+            color: var(--telegram-text-color);
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
         /* Load More Button */
-        .load-more-container {
+        .load-more {
             display: flex;
             justify-content: center;
-            margin: 1rem 0 2rem;
+            margin-top: 1.5rem;
         }
 
-        .load-more {
-            background-color: var(--telegram-card);
-            color: var(--telegram-text);
-            border: 1px solid var(--telegram-border);
-            border-radius: 20px;
-            padding: 0.8rem 1.5rem;
-            font-size: 0.95rem;
+        .load-more-btn {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--telegram-text-color);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 1rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: 44px;
+        }
+
+        .load-more-btn:active {
+            transform: scale(0.95);
+        }
+
+        .load-more-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: var(--telegram-bg-color);
+            margin: 2rem auto;
+            border-radius: 16px;
+            max-width: 800px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            color: var(--telegram-text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+
+        .modal-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--telegram-text-color);
+        }
+
+        .modal-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--telegram-hint-color);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-body {
+            padding: 1rem 2rem 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .movie-poster {
+            width: 100%;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .modal-details h3 {
+            margin-bottom: 1rem;
+            color: var(--telegram-text-color);
+        }
+
+        .modal-overview {
+            color: var(--telegram-hint-color);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .ai-insights {
+            background: rgba(51, 144, 236, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .ai-insights h4 {
+            color: var(--telegram-text-color);
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .load-more:hover {
-            background-color: var(--telegram-hover);
+        .insight-highlights {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
         }
 
-        /* Hero Section at Bottom */
-        .hero {
-            background: linear-gradient(135deg, rgba(0, 136, 204, 0.1) 0%, rgba(0, 102, 153, 0.05) 100%);
-            border-radius: 16px;
-            padding: 2.5rem 2rem;
-            text-align: center;
-            margin: 2rem 0;
-            border: 1px solid var(--telegram-border);
-        }
-
-        .hero h1 {
-            font-size: 2.2rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .hero p {
-            font-size: 1rem;
-            max-width: 600px;
-            margin: 0 auto 1.5rem;
-            color: var(--telegram-secondary);
-        }
-
-        .hero-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn-secondary {
-            background-color: var(--telegram-card);
-            color: var(--telegram-text);
-            border: 1px solid var(--telegram-border);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--telegram-hover);
-        }
-
-        /* Footer */
-        footer {
-            background-color: var(--telegram-card);
-            padding: 2rem 1.5rem;
-            border-top: 1px solid var(--telegram-border);
-            margin-top: 2rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-        }
-
-        .footer-section h3 {
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .footer-section ul {
+        .insight-highlights ul {
             list-style: none;
+            padding: 0;
         }
 
-        .footer-section ul li {
-            margin-bottom: 0.6rem;
-        }
-
-        .footer-section a {
-            color: var(--telegram-secondary);
-            text-decoration: none;
-            transition: color 0.3s;
-            font-size: 0.9rem;
-        }
-
-        .footer-section a:hover {
-            color: var(--primary);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 0.8rem;
-            margin-top: 1rem;
-        }
-
-        .social-links a {
+        .insight-highlights li {
+            padding: 0.5rem 0;
+            color: var(--telegram-hint-color);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: var(--telegram-bg);
-            color: var(--telegram-text);
-            transition: background-color 0.3s;
+            gap: 0.5rem;
         }
 
-        .social-links a:hover {
-            background-color: var(--primary);
+        .insight-highlights li:last-child {
+            border-bottom: none;
         }
 
-        .copyright {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--telegram-border);
-            color: var(--telegram-secondary);
-            font-size: 0.85rem;
+        .insight-highlights li:before {
+            content: "•";
+            color: var(--telegram-link-color);
+            font-weight: bold;
         }
 
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .cards-container {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            .logo-container {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 100%;
-                max-width: 250px;
-            }
-            
-            .cards-container {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 1rem;
-            }
-            
-            .card-img {
-                height: 220px;
-            }
-            
-            .prompt-input {
-                flex-direction: column;
-            }
-        }
-
-        /* Loading Animation */
-        .loading {
+        .modal-actions {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
+            gap: 1rem;
         }
 
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 12px;
+        }
+
+        .skeleton-card {
+            height: 400px;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Spinner */
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-left: 4px solid var(--primary);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
+            border-top: 2px solid var(--telegram-button-color);
+            width: 16px;
+            height: 16px;
             animation: spin 1s linear infinite;
         }
 
@@ -501,451 +493,241 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Movie Detail Modal (using the Telegram preview style) */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            z-index: 3000;
-            overflow-y: auto;
-        }
-
-        .modal-content {
-            background-color: var(--telegram-bg);
-            margin: 2rem auto;
-            padding: 0;
-            border-radius: 12px;
-            max-width: 90%;
-            width: 800px;
-            position: relative;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-            overflow: hidden;
-            height: 80vh;
-        }
-
-        .modal-header {
-            background-color: var(--telegram-card);
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--telegram-border);
-        }
-
-        .modal-header h3 {
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-            height: calc(100% - 60px);
-            overflow-y: auto;
-        }
-
-        .movie-detail {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .movie-poster {
-            width: 300px;
-            border-radius: 12px;
-            flex-shrink: 0;
-        }
-
-        .movie-info {
-            flex: 1;
-        }
-
-        .movie-info h2 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-        }
-
-        .movie-meta {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            color: var(--telegram-secondary);
-            font-size: 0.9rem;
-        }
-
-        .movie-overview {
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .ai-insights {
-            background-color: rgba(0, 136, 204, 0.1);
-            border-radius: 10px;
-            padding: 1.2rem;
-            margin-bottom: 1.5rem;
-            border-left: 3px solid var(--primary);
-        }
-
-        .ai-insights h3 {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.8rem;
-            color: var(--primary);
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        /* Telegram Preview Modal */
-        .telegram-preview-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            z-index: 3000;
-            overflow-y: auto;
-        }
-
-        .telegram-preview-content {
-            background-color: var(--telegram-bg);
-            margin: 2rem auto;
-            padding: 0;
-            border-radius: 12px;
-            max-width: 90%;
-            width: 800px;
-            position: relative;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-            overflow: hidden;
-            height: 80vh;
-        }
-
-        .telegram-preview-header {
-            background-color: var(--telegram-card);
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--telegram-border);
-        }
-
-        .telegram-preview-header h3 {
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .telegram-webview-notice {
-            padding: 2rem;
-            text-align: center;
-            color: var(--telegram-secondary);
-            height: calc(100% - 60px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .telegram-webview-notice a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .telegram-webview-notice i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-
-        @media (max-width: 768px) {
-            .movie-detail {
-                flex-direction: column;
-            }
-
-            .movie-poster {
-                width: 100%;
-                max-width: 300px;
-                margin: 0 auto;
-            }
-            
-            .modal-content, .telegram-preview-content {
-                width: 95%;
-                height: 70vh;
-            }
-            
-            .modal-actions {
-                flex-direction: column;
-            }
-        }
-
-        /* Search Animation */
-        @keyframes searchPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
-
-        .searching {
-            animation: searchPulse 1s infinite;
-        }
-
         /* Share Tooltip */
         .share-tooltip {
-            position: absolute;
-            background: var(--telegram-card);
-            color: var(--telegram-text);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: nowrap;
+            position: fixed;
+            background: var(--telegram-button-color);
+            color: var(--telegram-button-text-color);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 1000;
             opacity: 0;
-            transition: opacity 0.3s;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
         }
 
         .share-tooltip.show {
             opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Empty States */
+        .empty-state, .error-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--telegram-hint-color);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i, .error-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .modal-body {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .movie-poster {
+                max-width: 250px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 1rem;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+
+            .modal-header {
+                padding: 1.5rem 1rem 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Logo Section -->
-    <div class="logo-section">
-        <div class="logo-container">
-            <svg viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
-                        <feOffset dx="0" dy="4" result="offsetblur"/>
-                        <feComponentTransfer>
-                            <feFuncA type="linear" slope="0.5"/>
-                        </feComponentTransfer>
-                        <feMerge>
-                            <feMergeNode/>
-                            <feMergeNode in="SourceGraphic"/>
-                        </feMerge>
-                    </filter>
-                </defs>
-                
-                <!-- Background -->
-                <rect width="640" height="480" fill="#C73737"/>
-                
-                <!-- Circle outline -->
-                <circle cx="320" cy="240" r="160" fill="none" stroke="white" stroke-width="12" opacity="0.9"/>
-                
-                <!-- Inner shadow circle -->
-                <circle cx="320" cy="240" r="148" fill="#8B2020" opacity="0.6"/>
-                
-                <!-- Text: Hosman -->
-                <text x="320" y="240" font-family="'Brush Script MT', cursive, serif" font-size="110" font-weight="bold" 
-                    fill="white" text-anchor="middle" filter="url(#shadow)" font-style="italic">
-                    Hosman
-                </text>
-                
-                <!-- Text: Reviews -->
-                <text x="320" y="330" font-family="'Brush Script MT', cursive, serif" font-size="70" font-weight="bold" 
-                    fill="white" text-anchor="middle" filter="url(#shadow)" font-style="italic">
-                    Reviews
-                </text>
-            </svg>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>🎬 MovieMate</h1>
+            <p>AI-Powered Movie Recommendations in Telegram</p>
         </div>
-    </div>
 
-    <!-- Main Content -->
-    <main>
-        <!-- AI Recommendations -->
-        <section class="ai-recommendations-container">
-            <div class="section-title">
-                <h2><i class="fas fa-robot"></i> AI Recommendations</h2>
+        <!-- Trending Movies Section -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-fire"></i>
+                Trending Now
+            </h2>
+            <div id="trending" class="cards-container">
+                <!-- Trending movies will be loaded here -->
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
             </div>
-            
-            <div class="ai-prompt-section">
-                <h3><i class="fas fa-comment-alt"></i> What would you like to watch?</h3>
-                <div class="prompt-input">
-                    <input type="text" id="ai-prompt-input" placeholder="e.g., sci-fi movies with strong female leads">
-                    <button class="btn btn-primary" id="generate-recommendations">
-                        <i class="fas fa-search"></i> Get AI Recommendations
-                    </button>
-                </div>
-                
-                <div class="category-buttons">
-                    <button class="category-btn" data-category="action">Action</button>
-                    <button class="category-btn" data-category="comedy">Comedy</button>
-                    <button class="category-btn" data-category="drama">Drama</button>
-                    <button class="category-btn" data-category="sci-fi">Sci-Fi</button>
-                    <button class="category-btn" data-category="thriller">Thriller</button>
-                    <button class="category-btn" data-category="romance">Romance</button>
-                    <button class="category-btn" data-category="horror">Horror</button>
-                    <button class="category-btn" data-category="animation">Animation</button>
-                </div>
-            </div>
-            
-            <div class="ai-reason" id="ai-reason" style="display: none;">
-                <h4><i class="fas fa-lightbulb"></i> Why these recommendations?</h4>
-                <p id="reason-text">Based on your request, our AI selected these films because...</p>
-            </div>
-            
-            <div class="cards-container" id="ai-recommendations">
-                <div class="loading">
-                    <div class="spinner"></div>
-                </div>
-            </div>
-            <div class="load-more-container">
-                <button class="load-more" id="load-more-ai">
-                    <i class="fas fa-plus"></i> Load More Recommendations
-                </button>
-            </div>
-        </section>
-
-        <!-- Trending Now -->
-        <section id="movies">
-            <div class="section-title">
-                <h2><i class="fas fa-fire"></i> Trending Now</h2>
-            </div>
-            <div class="cards-container" id="trending">
-                <div class="loading">
-                    <div class="spinner"></div>
-                </div>
-            </div>
-            <div class="load-more-container">
-                <button class="load-more" id="load-more-trending">
+            <div class="load-more">
+                <button id="load-more-trending" class="load-more-btn">
                     <i class="fas fa-plus"></i> Load More Trending Movies
                 </button>
             </div>
-        </section>
+        </div>
 
-        <!-- Upcoming Movies -->
-        <section class="upcoming-movies" id="upcoming-movies">
-            <div class="section-title">
-                <h2><i class="fas fa-calendar-plus"></i> Coming Soon</h2>
-            </div>
-            <div class="cards-container" id="upcoming-container">
-                <div class="loading">
-                    <div class="spinner"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Hero Section at Bottom -->
-        <section class="hero">
-            <h1>Discover Movies with AI</h1>
-            <p>Describe what you want to watch and our AI will find perfect matches for you. Join our Telegram community for daily reviews.</p>
-            <div class="hero-buttons">
-                <button class="btn btn-primary" id="join-telegram">
-                    <i class="fab fa-telegram"></i> Join t.me/HosmanReviews
-                </button>
-                <button class="btn btn-secondary" id="preview-telegram">
-                    <i class="fas fa-eye"></i> Preview Channel
+        <!-- AI Recommendations Section -->
+        <div class="ai-input-section">
+            <h2 class="section-title">
+                <i class="fas fa-robot"></i>
+                AI Movie Recommendations
+            </h2>
+            
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    id="ai-prompt-input" 
+                    class="ai-input" 
+                    placeholder="Describe what you want to watch... (e.g., 'emotional drama with strong characters')"
+                >
+                <button id="generate-recommendations" class="btn">
+                    <i class="fas fa-search"></i> Find Movies
                 </button>
             </div>
-        </section>
-    </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Latest Movies on Hosman</h3>
-                <p>AI-powered movie discovery with Telegram integration.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-telegram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+            <div class="categories">
+                <button class="category-btn" data-category="action">
+                    <i class="fas fa-explosion"></i> Action
+                </button>
+                <button class="category-btn" data-category="comedy">
+                    <i class="fas fa-laugh"></i> Comedy
+                </button>
+                <button class="category-btn" data-category="drama">
+                    <i class="fas fa-theater-masks"></i> Drama
+                </button>
+                <button class="category-btn" data-category="sci-fi">
+                    <i class="fas fa-rocket"></i> Sci-Fi
+                </button>
+                <button class="category-btn" data-category="thriller">
+                    <i class="fas fa-suspense"></i> Thriller
+                </button>
+                <button class="category-btn" data-category="romance">
+                    <i class="fas fa-heart"></i> Romance
+                </button>
+                <button class="category-btn" data-category="horror">
+                    <i class="fas fa-ghost"></i> Horror
+                </button>
+                <button class="category-btn" data-category="animation">
+                    <i class="fas fa-film"></i> Animation
+                </button>
+            </div>
+
+            <div id="ai-reason" class="ai-reason">
+                <p id="reason-text"></p>
+            </div>
+
+            <div id="ai-recommendations" class="cards-container">
+                <!-- AI recommendations will appear here -->
+                <div class="empty-state">
+                    <i class="fas fa-robot"></i>
+                    <h3>Ready to Find Your Next Favorite Movie?</h3>
+                    <p>Enter a description or select a category above to get AI-powered recommendations!</p>
                 </div>
             </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#movies">Trending Movies</a></li>
-                    <li><a href="#upcoming-movies">Upcoming Movies</a></li>
-                    <li><a href="https://t.me/HosmanReviews" target="_blank">Telegram Channel</a></li>
-                </ul>
+
+            <div class="load-more">
+                <button id="load-more-ai" class="load-more-btn" style="display: none;">
+                    <i class="fas fa-plus"></i> Load More Recommendations
+                </button>
             </div>
         </div>
-        <div class="copyright">
-            <p>&copy; 2023 Latest Movies on Hosman. This site uses TMDB and Gemini APIs.</p>
-        </div>
-    </footer>
 
-    <!-- Movie Detail Modal (using Telegram preview style) -->
-    <div class="modal" id="movie-modal">
+        <!-- Upcoming Movies Section -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-calendar-star"></i>
+                Coming Soon
+            </h2>
+            <div id="upcoming-container" class="cards-container">
+                <!-- Upcoming movies will be loaded here -->
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Movie Details Modal -->
+    <div id="movie-modal" class="modal">
         <div class="modal-content">
+            <button class="close-modal">
+                <i class="fas fa-times"></i>
+            </button>
             <div class="modal-header">
-                <h3><i class="fas fa-film"></i> Movie Details</h3>
-                <button class="close-modal">&times;</button>
+                <h2 id="modal-title" class="modal-title">Movie Title</h2>
+                <div class="modal-meta">
+                    <span id="modal-year">2024</span>
+                    <span id="modal-rating">8.5/10</span>
+                    <span id="modal-runtime">120 min</span>
+                </div>
             </div>
             <div class="modal-body">
-                <div class="movie-detail">
-                    <img src="" alt="Movie Poster" class="movie-poster">
-                    <div class="movie-info">
-                        <h2 id="modal-title">Movie Title</h2>
-                        <div class="movie-meta">
-                            <span id="modal-year">2023</span>
-                            <span id="modal-rating">8.5/10</span>
-                            <span id="modal-runtime">120min</span>
+                <img id="modal-poster" class="movie-poster" src="" alt="Movie Poster">
+                <div class="modal-details">
+                    <h3>Overview</h3>
+                    <p id="modal-overview" class="modal-overview">
+                        Movie overview will appear here...
+                    </p>
+                    
+                    <div class="ai-insights">
+                        <h4><i class="fas fa-brain"></i> AI Insights</h4>
+                        <div id="modal-ai-insights">
+                            <p>Loading AI insights...</p>
                         </div>
-                        <p class="movie-overview" id="modal-overview">Movie overview goes here...</p>
-                        <div class="ai-insights">
-                            <h3><i class="fas fa-robot"></i> What to Expect</h3>
-                            <p id="modal-ai-insights">Loading AI insights...</p>
+                        <div id="insight-highlights" class="insight-highlights" style="display: none;">
+                            <h5>Why You'll Love It:</h5>
+                            <ul id="highlights-list">
+                                <!-- Highlights will be populated here -->
+                            </ul>
                         </div>
-                        <div class="modal-actions">
-                            <button class="btn btn-primary" id="modal-join-telegram">
-                                <i class="fab fa-telegram"></i> Join Community
-                            </button>
-                            <button class="btn btn-secondary" id="modal-share-btn">
-                                <i class="fas fa-share"></i> Share
-                            </button>
-                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button class="btn" onclick="shareCurrentMovie()">
+                            <i class="fas fa-share"></i> Share Movie
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Telegram Preview Modal -->
-    <div class="telegram-preview-modal" id="telegram-preview-modal">
-        <div class="telegram-preview-content">
-            <div class="telegram-preview-header">
-                <h3><i class="fab fa-telegram"></i> Hosman Reviews Channel</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="telegram-webview-notice">
-                <i class="fab fa-telegram"></i>
-                <h3>Visit Our Telegram Channel</h3>
-                <p>Telegram channels cannot be embedded directly due to security restrictions.</p>
-                <p>Please visit our channel directly to see the latest reviews:</p>
-                <p><a href="https://t.me/HosmanReviews" target="_blank">https://t.me/HosmanReviews</a></p>
-                <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="window.open('https://t.me/HosmanReviews', '_blank')">
-                    <i class="fab fa-telegram"></i> Open Telegram Channel
-                </button>
-            </div>
-        </div>
-    </div>
-
     <script>
+        // Telegram Web App SDK Integration
+        const Telegram = window.Telegram?.WebApp;
+
         // API Configuration
         const TMDB_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZTYzNzRiZTQ2ZTYxNGY2MzZkNjgxOWRiYmU1NGYyYiIsIm5iZiI6MTc2MzE4NjgxNC40MTEsInN1YiI6IjY5MTgxODdlOTUxNDNkZmE0NmEwZTU1OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.SWHyK0g4TvYfDL825KRKKhGcV3nkzfAYVZdigor2QAk';
-        const GEMINI_API_KEY = 'AIzaSyCTRuQZDxXGf-u2MY9HErtJWhQGgQ4_nhY';
-        
         const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
         const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
         const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';
@@ -957,6 +739,212 @@
         let currentCategory = '';
         let currentSearchQuery = '';
         let currentMovieForShare = null;
+
+        // Initialize Telegram Web App
+        function initTelegramApp() {
+            if (!Telegram) {
+                console.log('Not running in Telegram environment');
+                return;
+            }
+
+            // Initialize the app
+            Telegram.ready();
+            Telegram.expand();
+            
+            // Apply Telegram theme
+            applyTelegramTheme();
+            
+            // Setup main button
+            setupTelegramMainButton();
+            
+            // Setup events
+            setupTelegramEvents();
+
+            // Log user info for debugging
+            const user = Telegram.initDataUnsafe?.user;
+            if (user) {
+                console.log('Telegram User:', user.id, user.first_name);
+            }
+        }
+
+        // Apply Telegram theme colors
+        function applyTelegramTheme() {
+            const themeParams = Telegram.themeParams || {};
+            
+            // Update CSS variables
+            document.documentElement.style.setProperty('--telegram-bg-color', themeParams.bg_color || '#1a1a1a');
+            document.documentElement.style.setProperty('--telegram-text-color', themeParams.text_color || '#ffffff');
+            document.documentElement.style.setProperty('--telegram-hint-color', themeParams.hint_color || '#aaaaaa');
+            document.documentElement.style.setProperty('--telegram-link-color', themeParams.link_color || '#3390ec');
+            document.documentElement.style.setProperty('--telegram-button-color', themeParams.button_color || '#3390ec');
+            document.documentElement.style.setProperty('--telegram-button-text-color', themeParams.button_text_color || '#ffffff');
+        }
+
+        // Setup Telegram Main Button
+        function setupTelegramMainButton() {
+            if (!Telegram.MainButton) return;
+            
+            Telegram.MainButton.setText("Get Recommendations")
+                .show()
+                .onClick(() => {
+                    const prompt = document.getElementById('ai-prompt-input').value.trim();
+                    if (prompt || currentCategory) {
+                        performAIRecommendations(prompt, currentCategory);
+                        provideHapticFeedback('light');
+                    } else {
+                        showTelegramAlert('Please enter a description or select a category');
+                    }
+                });
+        }
+
+        // Setup Telegram Events
+        function setupTelegramEvents() {
+            if (!Telegram.onEvent) return;
+            
+            Telegram.onEvent('themeChanged', applyTelegramTheme);
+            Telegram.onEvent('viewportChanged', () => {
+                setTimeout(() => Telegram.expand(), 100);
+            });
+        }
+
+        // Enhanced AI Insights Generator
+        const enhancedAIInsights = {
+            templates: {
+                highRated: (movie, prompt) => ({
+                    main: `This ${movie.vote_average > 8 ? 'critically acclaimed' : 'highly rated'} film delivers an exceptional experience that ${prompt ? `matches your interest in ${prompt}` : 'stands out in its genre'}.`,
+                    highlights: [
+                        'Exceptional storytelling and narrative depth',
+                        'Strong character development and performances',
+                        'Memorable cinematic moments that resonate'
+                    ]
+                }),
+                
+                genreSpecific: {
+                    action: (movie) => ({
+                        main: `Get ready for an adrenaline-fueled experience with expertly choreographed action sequences and ${movie.vote_average > 7 ? 'surprisingly deep' : 'engaging'} storytelling.`,
+                        highlights: [
+                            'Thrilling stunt work and fight choreography',
+                            'High-stakes scenarios that keep you engaged',
+                            'Balanced mix of action and character moments'
+                        ]
+                    }),
+                    
+                    comedy: (movie) => ({
+                        main: `A perfect blend of smart humor and ${movie.vote_average > 7 ? 'heartfelt moments' : 'entertaining scenarios'} that will keep you laughing throughout.`,
+                        highlights: [
+                            'Sharp writing and clever dialogue',
+                            'Well-timed comedic performances',
+                            'Relatable humor that lands effectively'
+                        ]
+                    }),
+                    
+                    drama: (movie) => ({
+                        main: `An emotionally resonant journey that explores ${movie.vote_average > 7.5 ? 'complex human experiences' : 'compelling relationships'} with depth and authenticity.`,
+                        highlights: [
+                            'Powerful emotional storytelling',
+                            'Nuanced character performances',
+                            'Thought-provoking themes and messages'
+                        ]
+                    }),
+                    
+                    'sci-fi': (movie) => ({
+                        main: `Immerse yourself in ${movie.vote_average > 7 ? 'a visionary' : 'an imaginative'} world that explores fascinating concepts while maintaining ${movie.vote_average > 7 ? 'strong human elements' : 'entertaining storytelling'}.`,
+                        highlights: [
+                            'Creative world-building and concepts',
+                            'Futuristic elements that feel plausible',
+                            'Balanced mix of science and storytelling'
+                        ]
+                    }),
+                    
+                    thriller: (movie) => ({
+                        main: `A tense, gripping experience that will keep you on the edge of your seat with ${movie.vote_average > 7 ? 'masterful suspense' : 'compelling mystery'}.`,
+                        highlights: [
+                            'Expertly crafted tension and suspense',
+                            'Unexpected twists and revelations',
+                            'Atmospheric storytelling that draws you in'
+                        ]
+                    }),
+                    
+                    romance: (movie) => ({
+                        main: `A heartfelt exploration of relationships that balances ${movie.vote_average > 7 ? 'genuine emotional depth' : 'engaging romantic dynamics'} with compelling storytelling.`,
+                        highlights: [
+                            'Authentic chemistry between characters',
+                            'Emotional resonance and connection',
+                            'Believable relationship development'
+                        ]
+                    }),
+                    
+                    horror: (movie) => ({
+                        main: `An ${movie.vote_average > 7 ? 'atmospheric and chilling' : 'entertaining and suspenseful'} experience that delivers genuine scares while ${movie.vote_average > 7 ? 'exploring deeper themes' : 'keeping you engaged'}.`,
+                        highlights: [
+                            'Effective atmosphere and tension building',
+                            'Creative scares and suspenseful moments',
+                            'Memorable horror elements and sequences'
+                        ]
+                    }),
+                    
+                    animation: (movie) => ({
+                        main: `A ${movie.vote_average > 7 ? 'visually stunning and creatively rich' : 'colorful and entertaining'} animated experience that appeals to ${movie.vote_average > 7 ? 'all ages with its depth' : 'viewers with its charm'}.`,
+                        highlights: [
+                            'Beautiful visual artistry and animation',
+                            'Creative storytelling and world-building',
+                            'Universal themes with broad appeal'
+                        ]
+                    })
+                }
+            },
+            
+            generateInsights: function(movie, prompt = '') {
+                const rating = movie.vote_average || 0;
+                const genres = movie.genre_ids || [];
+                
+                // Determine primary genre
+                let primaryGenre = '';
+                if (genres.includes(28)) primaryGenre = 'action';
+                else if (genres.includes(35)) primaryGenre = 'comedy';
+                else if (genres.includes(18)) primaryGenre = 'drama';
+                else if (genres.includes(878)) primaryGenre = 'sci-fi';
+                else if (genres.includes(53)) primaryGenre = 'thriller';
+                else if (genres.includes(10749)) primaryGenre = 'romance';
+                else if (genres.includes(27)) primaryGenre = 'horror';
+                else if (genres.includes(16)) primaryGenre = 'animation';
+                
+                let template;
+                
+                // Use genre-specific templates when available
+                if (primaryGenre && this.templates.genreSpecific[primaryGenre]) {
+                    template = this.templates.genreSpecific[primaryGenre](movie);
+                } else {
+                    template = this.templates.highRated(movie, prompt);
+                }
+                
+                // Add rating context
+                if (rating > 8.5) {
+                    template.main += ` With an outstanding ${rating}/10 rating, this is considered one of the best films in its category.`;
+                } else if (rating > 7.5) {
+                    template.main += ` The excellent ${rating}/10 rating reflects its high quality and strong audience appeal.`;
+                } else if (rating > 6.5) {
+                    template.main += ` The solid ${rating}/10 rating indicates consistent entertainment value and quality.`;
+                } else if (rating > 0) {
+                    template.main += ` The ${rating}/10 rating suggests this film has found its audience with specific appeal.`;
+                }
+                
+                // Add prompt-specific context
+                if (prompt && prompt.length > 0) {
+                    if (prompt.includes('emotional') || prompt.includes('drama')) {
+                        template.main += ` Perfect for viewers seeking an emotionally engaging experience.`;
+                    }
+                    if (prompt.includes('funny') || prompt.includes('comedy')) {
+                        template.main += ` Delivers the laughs and entertainment you're looking for.`;
+                    }
+                    if (prompt.includes('action') || prompt.includes('thrilling')) {
+                        template.main += ` Packed with the excitement and energy that action fans crave.`;
+                    }
+                }
+                
+                return template;
+            }
+        };
 
         // TMDB API Functions
         async function fetchFromTMDB(endpoint) {
@@ -999,7 +987,6 @@
 
         // Fetch movies by category
         async function fetchMoviesByCategory(category, page = 1) {
-            // For simplicity, we'll use genre IDs
             const genreMap = {
                 'action': 28,
                 'comedy': 35,
@@ -1011,7 +998,7 @@
                 'animation': 16
             };
             
-            const genreId = genreMap[category] || 28; // Default to action
+            const genreId = genreMap[category] || 28;
             const data = await fetchFromTMDB(`/discover/movie?with_genres=${genreId}&page=${page}`);
             if (data && data.results) {
                 return data.results;
@@ -1031,103 +1018,6 @@
         // Fetch movie details by ID
         async function fetchMovieDetails(movieId) {
             return await fetchFromTMDB(`/movie/${movieId}`);
-        }
-
-        // Generate AI insights using Gemini API
-        async function generateAIInsights(item, prompt = '') {
-            try {
-                const title = item.title;
-                const description = item.overview || 'No description available.';
-                const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
-                const year = item.release_date ? item.release_date.substring(0, 4) : 'N/A';
-                
-                // Enhanced AI insights that focus on what to expect
-                const standoutElements = [];
-                
-                if (item.vote_average > 7.5) {
-                    standoutElements.push('exceptionally high audience ratings');
-                }
-                
-                if (item.popularity > 100) {
-                    standoutElements.push('significant popularity among viewers');
-                }
-                
-                if (description && description.length > 150) {
-                    standoutElements.push('complex and engaging storyline');
-                }
-                
-                if (item.genre_ids && item.genre_ids.includes(28)) {
-                    standoutElements.push('thrilling action sequences');
-                }
-                
-                if (item.genre_ids && item.genre_ids.includes(35)) {
-                    standoutElements.push('sharp comedic timing');
-                }
-                
-                if (item.genre_ids && item.genre_ids.includes(18)) {
-                    standoutElements.push('deep emotional resonance');
-                }
-                
-                if (item.genre_ids && item.genre_ids.includes(878)) {
-                    standoutElements.push('imaginative world-building');
-                }
-                
-                if (item.genre_ids && item.genre_ids.includes(53)) {
-                    standoutElements.push('suspenseful plot twists');
-                }
-                
-                if (item.genre_ids && item.genre_ids.includes(10749)) {
-                    standoutElements.push('compelling romantic dynamics');
-                }
-                
-                if (item.genre_ids && item.genre_ids.includes(27)) {
-                    standoutElements.push('atmospheric tension and scares');
-                }
-                
-                if (item.genre_ids && item.genre_ids.includes(16)) {
-                    standoutElements.push('visually stunning animation');
-                }
-                
-                // Create insight focused on what to expect
-                let insight = `When watching "${title}", you can expect `;
-                
-                if (standoutElements.length > 0) {
-                    if (standoutElements.length === 1) {
-                        insight += standoutElements[0];
-                    } else {
-                        insight += standoutElements.slice(0, -1).join(', ') + ' and ' + standoutElements[standoutElements.length - 1];
-                    }
-                } else {
-                    insight += `a ${rating > 7 ? 'highly' : 'consistently'} entertaining experience`;
-                }
-                
-                insight += `. The film has a rating of ${rating}/10 and ${prompt.includes('comedy') ? 'will keep you laughing' : 'offers a compelling watch'}.`;
-                
-                // Add more specific expectations based on genre
-                if (item.genre_ids && item.genre_ids.includes(28)) {
-                    insight += ` Action fans will appreciate the well-choreographed sequences and high-stakes scenarios.`;
-                }
-                
-                if (item.genre_ids && item.genre_ids.includes(35)) {
-                    insight += ` The humor is well-timed and the comedic situations will leave you entertained throughout.`;
-                }
-                
-                if (item.genre_ids && item.genre_ids.includes(18)) {
-                    insight += ` The emotional depth and character development make this a thought-provoking viewing experience.`;
-                }
-                
-                if (item.genre_ids && item.genre_ids.includes(878)) {
-                    insight += ` The imaginative concepts and futuristic elements create a captivating world to explore.`;
-                }
-                
-                // Simulate API delay
-                await new Promise(resolve => setTimeout(resolve, 800));
-                
-                return insight;
-            } catch (error) {
-                console.error("Gemini API error:", error);
-                return "When watching this film, you can expect an engaging experience with solid storytelling and quality production values. The movie has received positive audience reception for its entertainment value and execution.";
-            }
         }
 
         // Generate AI recommendation reason
@@ -1157,6 +1047,11 @@
             const description = item.overview || 'Description not available.';
             const imagePath = item.poster_path ? `${TMDB_IMAGE_BASE_URL}${item.poster_path}` : PLACEHOLDER_IMAGE;
             
+            // Determine rating class for color coding
+            let ratingClass = 'medium';
+            if (item.vote_average > 7.5) ratingClass = 'high';
+            else if (item.vote_average < 6) ratingClass = 'low';
+            
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
@@ -1165,15 +1060,15 @@
                     <h3 class="card-title">${title}</h3>
                     <div class="card-meta">
                         <span>${year}</span>
-                        <span><i class="fas fa-star"></i> ${rating}</span>
+                        <span class="rating ${ratingClass}"><i class="fas fa-star"></i> ${rating}</span>
                     </div>
                     <p class="card-description">${description}</p>
                     <div class="card-actions">
-                        <button class="card-action" onclick="openModal(${item.id})">
+                        <button class="card-action primary" onclick="openModal(${item.id})">
                             <i class="fas fa-info-circle"></i> Details
                         </button>
                         ${showShareButton ? `
-                        <button class="share-btn" onclick="shareMovie('${title.replace(/'/g, "\\'")}')">
+                        <button class="card-action" onclick="shareMovie('${title.replace(/'/g, "\\'")}')">
                             <i class="fas fa-share"></i> Share
                         </button>
                         ` : ''}
@@ -1193,19 +1088,27 @@
         // Show loading in container
         function showLoading(containerId) {
             const container = document.getElementById(containerId);
-            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            container.innerHTML = `
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+            `;
         }
 
-        // Open modal with details
+        // Enhanced modal open function
         async function openModal(movieId) {
             try {
-                // Show loading state
-                document.getElementById('modal-ai-insights').textContent = 'Loading AI insights...';
+                // Show loading state with haptic feedback
+                provideHapticFeedback('light');
+                
+                document.getElementById('modal-ai-insights').innerHTML = '<p>Loading AI insights...</p>';
+                document.getElementById('insight-highlights').style.display = 'none';
                 
                 const item = await fetchMovieDetails(movieId);
                 
                 if (!item) {
-                    alert('Error loading details. Please try again.');
+                    showTelegramAlert('Error loading details. Please try again.');
                     return;
                 }
                 
@@ -1222,46 +1125,99 @@
                 document.getElementById('modal-rating').textContent = `${rating}/10`;
                 document.getElementById('modal-runtime').textContent = runtime;
                 document.getElementById('modal-overview').textContent = item.overview || 'No overview available.';
-                document.querySelector('.movie-poster').src = imagePath;
+                document.getElementById('modal-poster').src = imagePath;
                 
-                // Generate AI insights
-                const aiInsights = await generateAIInsights(item, currentSearchQuery || currentCategory);
-                document.getElementById('modal-ai-insights').textContent = aiInsights;
+                // Generate enhanced AI insights
+                const insights = enhancedAIInsights.generateInsights(item, currentSearchQuery || currentCategory);
+                
+                document.getElementById('modal-ai-insights').innerHTML = `
+                    <p>${insights.main}</p>
+                `;
+                
+                // Show highlights if available
+                if (insights.highlights && insights.highlights.length > 0) {
+                    const highlightsList = document.getElementById('highlights-list');
+                    highlightsList.innerHTML = insights.highlights.map(highlight => 
+                        `<li>${highlight}</li>`
+                    ).join('');
+                    document.getElementById('insight-highlights').style.display = 'block';
+                }
                 
                 document.getElementById('movie-modal').style.display = 'block';
+                
             } catch (error) {
                 console.error('Error opening modal:', error);
-                alert('Error loading details. Please try again.');
+                showTelegramAlert('Error loading details. Please try again.');
             }
         }
 
-        // Share movie function
+        // Enhanced share function
         function shareMovie(title) {
             const shareUrl = `${WEBSITE_URL}?search=${encodeURIComponent(title)}`;
+            const shareText = `Check out "${title}" on MovieMate! 🎬\n\n${shareUrl}`;
             
-            // Create a temporary input element
+            if (Telegram && Telegram.isVersionAtLeast('6.1')) {
+                // Use Telegram's native popup for sharing
+                Telegram.showPopup({
+                    title: 'Share Movie',
+                    message: `Share "${title}" with friends?`,
+                    buttons: [
+                        {
+                            type: 'default',
+                            text: 'Copy Link',
+                            id: 'copy'
+                        },
+                        {
+                            type: 'default',
+                            text: 'Share via Telegram',
+                            id: 'telegram'
+                        },
+                        {
+                            type: 'cancel',
+                            id: 'cancel'
+                        }
+                    ]
+                }, (buttonId) => {
+                    if (buttonId === 'copy') {
+                        copyToClipboard(shareUrl);
+                        showTelegramAlert('Link copied to clipboard! 📋');
+                    } else if (buttonId === 'telegram' && Telegram.openTelegramLink) {
+                        Telegram.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(`Check out "${title}" 🎬`)}`);
+                    }
+                });
+            } else {
+                // Fallback for older versions or non-Telegram
+                copyToClipboard(shareUrl);
+                showNativeTooltip();
+            }
+            
+            provideHapticFeedback('light');
+        }
+
+        // Share current movie from modal
+        function shareCurrentMovie() {
+            if (currentMovieForShare) {
+                shareMovie(currentMovieForShare.title);
+            }
+        }
+
+        // Copy to clipboard helper
+        function copyToClipboard(text) {
             const tempInput = document.createElement('input');
-            tempInput.value = shareUrl;
+            tempInput.value = text;
             document.body.appendChild(tempInput);
             tempInput.select();
             document.execCommand('copy');
             document.body.removeChild(tempInput);
-            
-            // Show tooltip
+        }
+
+        // Show native tooltip
+        function showNativeTooltip() {
             const tooltip = document.createElement('div');
             tooltip.className = 'share-tooltip show';
             tooltip.textContent = 'Link copied to clipboard!';
             document.body.appendChild(tooltip);
             
-            // Position tooltip near the share button
-            const shareButtons = document.querySelectorAll('.share-btn');
-            const lastShareButton = shareButtons[shareButtons.length - 1];
-            const rect = lastShareButton.getBoundingClientRect();
-            tooltip.style.top = `${rect.top - 40}px`;
-            tooltip.style.left = `${rect.left + rect.width/2}px`;
-            tooltip.style.transform = 'translateX(-50%)';
-            
-            // Remove tooltip after 2 seconds
             setTimeout(() => {
                 tooltip.classList.remove('show');
                 setTimeout(() => {
@@ -1270,16 +1226,38 @@
             }, 2000);
         }
 
-        // Perform AI recommendations
+        // Haptic feedback helper
+        function provideHapticFeedback(type = 'light') {
+            if (Telegram && Telegram.HapticFeedback) {
+                try {
+                    Telegram.HapticFeedback.impactOccurred(type);
+                } catch (error) {
+                    console.log('Haptic feedback not available');
+                }
+            }
+        }
+
+        // Telegram alert wrapper
+        function showTelegramAlert(message) {
+            if (Telegram && Telegram.showAlert) {
+                Telegram.showAlert(message);
+            } else {
+                alert(message);
+            }
+        }
+
+        // Enhanced AI recommendations
         async function performAIRecommendations(prompt, category = '', loadMore = false) {
             if (!loadMore) {
                 showLoading('ai-recommendations');
                 aiPage = 1;
+                provideHapticFeedback('light');
             }
             
-            // Show searching animation
             const searchButton = document.getElementById('generate-recommendations');
-            searchButton.classList.add('searching');
+            const originalText = searchButton.innerHTML;
+            searchButton.innerHTML = '<div class="spinner"></div> Searching...';
+            searchButton.disabled = true;
             
             try {
                 let movies = [];
@@ -1293,9 +1271,8 @@
                     currentSearchQuery = prompt;
                     currentCategory = '';
                 } else {
-                    // For demo, we'll use a mix of trending and genre-based
                     const trending = await fetchTrendingMovies(aiPage);
-                    movies = trending.slice(0, 6); // Show 6 recommendations
+                    movies = trending.slice(0, 6);
                     currentSearchQuery = '';
                     currentCategory = '';
                 }
@@ -1307,19 +1284,21 @@
                 if (movies.length === 0) {
                     if (!loadMore) {
                         document.getElementById('ai-recommendations').innerHTML = `
-                            <div style="text-align: center; padding: 2rem; color: var(--telegram-secondary); grid-column: 1 / -1;">
-                                <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <div class="empty-state">
+                                <i class="fas fa-search"></i>
                                 <h3>No recommendations found</h3>
                                 <p>Try a different description or category.</p>
                             </div>
                         `;
                     }
+                    provideHapticFeedback('warning');
                 } else {
                     // Show AI reason if it's a new search
                     if (!loadMore) {
                         const reasonText = generateAIReason(prompt, category);
                         document.getElementById('reason-text').textContent = reasonText;
                         document.getElementById('ai-reason').style.display = 'block';
+                        provideHapticFeedback('success');
                     }
                     
                     // Display recommendations
@@ -1334,22 +1313,24 @@
                 console.error('AI recommendation error:', error);
                 if (!loadMore) {
                     document.getElementById('ai-recommendations').innerHTML = `
-                        <div style="text-align: center; padding: 2rem; color: var(--telegram-secondary); grid-column: 1 / -1;">
-                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <div class="error-state">
+                            <i class="fas fa-exclamation-triangle"></i>
                             <h3>Recommendation Error</h3>
                             <p>Unable to generate recommendations. Please try again later.</p>
                         </div>
                     `;
                 }
+                provideHapticFeedback('error');
             } finally {
-                searchButton.classList.remove('searching');
+                searchButton.innerHTML = originalText;
+                searchButton.disabled = false;
             }
         }
 
         // Load more trending movies
         async function loadMoreTrending() {
             const loadMoreButton = document.getElementById('load-more-trending');
-            loadMoreButton.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div> Loading...';
+            loadMoreButton.innerHTML = '<div class="spinner"></div> Loading...';
             loadMoreButton.disabled = true;
             
             try {
@@ -1360,6 +1341,7 @@
                     additionalMovies.forEach(movie => {
                         createCard(movie, 'trending', true);
                     });
+                    provideHapticFeedback('light');
                 } else {
                     loadMoreButton.innerHTML = '<i class="fas fa-check"></i> No More Movies';
                     loadMoreButton.disabled = true;
@@ -1369,8 +1351,10 @@
                 loadMoreButton.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error Loading';
             } finally {
                 setTimeout(() => {
-                    loadMoreButton.innerHTML = '<i class="fas fa-plus"></i> Load More Trending Movies';
-                    loadMoreButton.disabled = false;
+                    if (loadMoreButton.disabled !== true) {
+                        loadMoreButton.innerHTML = '<i class="fas fa-plus"></i> Load More Trending Movies';
+                        loadMoreButton.disabled = false;
+                    }
                 }, 2000);
             }
         }
@@ -1378,7 +1362,7 @@
         // Load more AI recommendations
         async function loadMoreAI() {
             const loadMoreButton = document.getElementById('load-more-ai');
-            loadMoreButton.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div> Loading...';
+            loadMoreButton.innerHTML = '<div class="spinner"></div> Loading...';
             loadMoreButton.disabled = true;
             
             try {
@@ -1402,9 +1386,10 @@
                 const trendingData = await fetchTrendingMovies();
                 const upcomingData = await fetchUpcomingMovies();
                 
-                // Clear loading indicators
-                document.querySelectorAll('.loading').forEach(el => {
-                    el.style.display = 'none';
+                // Clear loading indicators and populate with real data
+                const loadingContainers = document.querySelectorAll('.cards-container');
+                loadingContainers.forEach(container => {
+                    container.innerHTML = '';
                 });
                 
                 // Populate sections with real data
@@ -1422,10 +1407,10 @@
                     
             } catch (error) {
                 console.error('Initialization error:', error);
-                document.querySelectorAll('.loading').forEach(el => {
-                    el.innerHTML = `
-                        <div style="text-align: center; padding: 2rem; color: var(--telegram-secondary);">
-                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                document.querySelectorAll('.cards-container').forEach(container => {
+                    container.innerHTML = `
+                        <div class="error-state">
+                            <i class="fas fa-exclamation-triangle"></i>
                             <p>Unable to load content. Please check your connection and try again.</p>
                         </div>
                     `;
@@ -1433,8 +1418,16 @@
             }
         }
 
+        // Close modal function
+        function closeModal() {
+            document.getElementById('movie-modal').style.display = 'none';
+        }
+
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Telegram Web App
+            initTelegramApp();
+            
             // Initialize with real TMDB data
             initializePage();
             
@@ -1444,29 +1437,23 @@
                 if (prompt || currentCategory) {
                     performAIRecommendations(prompt, currentCategory);
                 } else {
-                    alert('Please enter a description or select a category');
+                    showTelegramAlert('Please enter a description or select a category');
                 }
             });
             
-            // Category buttons
+            // Category buttons with haptic feedback
             document.querySelectorAll('.category-btn').forEach(button => {
                 button.addEventListener('click', function() {
-                    // Remove active class from all buttons
+                    provideHapticFeedback('selection');
+                    
                     document.querySelectorAll('.category-btn').forEach(btn => {
                         btn.classList.remove('active');
                     });
                     
-                    // Add active class to clicked button
                     this.classList.add('active');
-                    
-                    // Set current category
                     currentCategory = this.getAttribute('data-category');
                     currentSearchQuery = '';
-                    
-                    // Clear the prompt input
                     document.getElementById('ai-prompt-input').value = '';
-                    
-                    // Generate recommendations
                     performAIRecommendations('', currentCategory);
                 });
             });
@@ -1475,40 +1462,14 @@
             document.getElementById('load-more-trending').addEventListener('click', loadMoreTrending);
             document.getElementById('load-more-ai').addEventListener('click', loadMoreAI);
             
-            // Telegram CTAs
-            document.getElementById('join-telegram').addEventListener('click', function() {
-                window.open('https://t.me/HosmanReviews', '_blank');
-            });
-            
-            document.getElementById('preview-telegram').addEventListener('click', function() {
-                document.getElementById('telegram-preview-modal').style.display = 'block';
-            });
-            
-            document.getElementById('modal-join-telegram').addEventListener('click', function() {
-                window.open('https://t.me/HosmanReviews', '_blank');
-            });
-            
-            // Modal share button
-            document.getElementById('modal-share-btn').addEventListener('click', function() {
-                if (currentMovieForShare) {
-                    shareMovie(currentMovieForShare.title);
-                }
-            });
-            
             // Modal close
             document.querySelectorAll('.close-modal').forEach(button => {
-                button.addEventListener('click', function() {
-                    document.getElementById('movie-modal').style.display = 'none';
-                    document.getElementById('telegram-preview-modal').style.display = 'none';
-                });
+                button.addEventListener('click', closeModal);
             });
             
             window.addEventListener('click', function(event) {
                 if (event.target === document.getElementById('movie-modal')) {
-                    document.getElementById('movie-modal').style.display = 'none';
-                }
-                if (event.target === document.getElementById('telegram-preview-modal')) {
-                    document.getElementById('telegram-preview-modal').style.display = 'none';
+                    closeModal();
                 }
             });
 
@@ -1519,6 +1480,13 @@
                 document.getElementById('ai-prompt-input').value = searchParam;
                 performAIRecommendations(searchParam);
             }
+
+            // Enter key support for AI input
+            document.getElementById('ai-prompt-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('generate-recommendations').click();
+                }
+            });
         });
     </script>
 </body>
