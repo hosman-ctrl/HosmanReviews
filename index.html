@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MovieMate - Telegram Web App</title>
+    <title>Hosman Reviews - Telegram Web App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -64,6 +64,13 @@
             text-align: center;
             margin-bottom: 1.5rem;
             padding: 1rem;
+        }
+
+        .header-logo {
+            width: 200px;
+            height: auto;
+            margin: 0 auto 1rem;
+            display: block;
         }
 
         .header h1 {
@@ -662,6 +669,10 @@
                 max-width: 150px;
                 margin: 0 auto;
             }
+            
+            .header-logo {
+                width: 160px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -684,14 +695,53 @@
             .card {
                 height: 150px;
             }
+            
+            .header-logo {
+                width: 140px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header Section -->
+        <!-- Header Section with New Logo -->
         <div class="header">
-            <h1>🎬 MovieMate</h1>
+            <svg class="header-logo" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+                        <feOffset dx="0" dy="4" result="offsetblur"/>
+                        <feComponentTransfer>
+                            <feFuncA type="linear" slope="0.5"/>
+                        </feComponentTransfer>
+                        <feMerge>
+                            <feMergeNode/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+                
+                <!-- Background -->
+                <rect width="640" height="480" fill="#C73737"/>
+                
+                <!-- Circle outline -->
+                <circle cx="320" cy="240" r="160" fill="none" stroke="white" stroke-width="12" opacity="0.9"/>
+                
+                <!-- Inner shadow circle -->
+                <circle cx="320" cy="240" r="148" fill="#8B2020" opacity="0.6"/>
+                
+                <!-- Text: Hosman -->
+                <text x="320" y="240" font-family="'Brush Script MT', cursive, serif" font-size="110" font-weight="bold" 
+                      fill="white" text-anchor="middle" filter="url(#shadow)" font-style="italic">
+                    Hosman
+                </text>
+                
+                <!-- Text: Reviews -->
+                <text x="320" y="330" font-family="'Brush Script MT', cursive, serif" font-size="70" font-weight="bold" 
+                      fill="white" text-anchor="middle" filter="url(#shadow)" font-style="italic">
+                    Reviews
+                </text>
+            </svg>
             <p>AI-Powered Movie Recommendations in Telegram</p>
         </div>
 
@@ -854,7 +904,7 @@
                 <i class="fas fa-times"></i>
             </button>
             <div class="modal-header">
-                <h2 class="modal-title">About MovieMate</h2>
+                <h2 class="modal-title">About Hosman Reviews</h2>
             </div>
             <div class="modal-body">
                 <div class="info-section">
@@ -1543,7 +1593,7 @@
         // Enhanced share function
         function shareMovie(title) {
             const shareUrl = `${WEBSITE_URL}?search=${encodeURIComponent(title)}`;
-            const shareText = `Check out "${title}" on MovieMate! 🎬\n\n${shareUrl}`;
+            const shareText = `Check out "${title}" on Hosman Reviews! 🎬\n\n${shareUrl}`;
             
             if (Telegram && Telegram.isVersionAtLeast('6.1')) {
                 // Use Telegram's native popup for sharing
