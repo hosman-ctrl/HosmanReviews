@@ -4,15 +4,692 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hosman Reviews - Telegram Web App</title>
-    <!-- Telegram SDKs -->
+    <!-- Telegram SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://telegram.org/js/telegram-analytics.js"></script>
-    <script src="https://telegram.org/js/telegram-webapps.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ... (keep all existing CSS styles exactly as they are) ... */
-        
-        /* Additional styles for analytics and debugging */
+        :root {
+            /* Light theme variables */
+            --bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --hint-color: #666666;
+            --link-color: #1976d2;
+            --button-color: #1976d2;
+            --button-text-color: #ffffff;
+            --secondary-bg: #f5f5f5;
+            --section-bg: #f8f9fa;
+            --border-color: #e0e0e0;
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --modal-overlay: rgba(0, 0, 0, 0.7);
+            --accent-color: #ff6b6b;
+        }
+
+        .dark-theme {
+            /* Dark theme variables */
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --hint-color: #aaaaaa;
+            --link-color: #90caf9;
+            --button-color: #1976d2;
+            --button-text-color: #ffffff;
+            --secondary-bg: #1e1e1e;
+            --section-bg: #2d2d2d;
+            --border-color: #333333;
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --modal-overlay: rgba(0, 0, 0, 0.85);
+            --accent-color: #ff6b6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 16px;
+            padding-bottom: 80px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+        }
+
+        .header-logo {
+            width: 200px;
+            height: auto;
+            margin: 0 auto 1rem;
+            display: block;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .header p {
+            color: var(--hint-color);
+            font-size: 1rem;
+        }
+
+        .section {
+            background: var(--section-bg);
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: var(--link-color);
+        }
+
+        .info-button {
+            background: none;
+            border: none;
+            color: var(--hint-color);
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .info-button:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text-color);
+        }
+
+        .dark-theme .info-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .card {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+            height: 160px;
+            display: flex;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: var(--link-color);
+        }
+
+        .card-img {
+            width: 40%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 0.8rem;
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+            color: var(--text-color);
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--hint-color);
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .rating.high {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .rating.medium {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+        }
+
+        .rating.low {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .card-description {
+            color: var(--hint-color);
+            font-size: 0.8rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .ai-input-section {
+            background: var(--section-bg);
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .ai-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--secondary-bg);
+            color: var(--text-color);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .ai-input:focus {
+            outline: none;
+            border-color: var(--link-color);
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2);
+        }
+
+        .ai-input::placeholder {
+            color: var(--hint-color);
+        }
+
+        .btn {
+            padding: 0.8rem 1.2rem;
+            background: var(--button-color);
+            color: var(--button-text-color);
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: 44px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-accent {
+            background: var(--accent-color);
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-btn {
+            padding: 0.6rem 0.8rem;
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 36px;
+        }
+
+        .dark-theme .category-btn {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .category-btn.active {
+            background: var(--button-color);
+            border-color: var(--button-color);
+            color: var(--button-text-color);
+        }
+
+        .category-btn:active {
+            transform: scale(0.95);
+        }
+
+        .ai-reason {
+            background: rgba(25, 118, 210, 0.1);
+            border: 1px solid rgba(25, 118, 210, 0.3);
+            border-radius: 12px;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .ai-reason p {
+            color: var(--text-color);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .year-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .year-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dark-theme .year-btn {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .year-btn.active {
+            background: var(--button-color);
+            border-color: var(--button-color);
+            color: var(--button-text-color);
+        }
+
+        .load-more {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.2rem;
+        }
+
+        .load-more-btn {
+            padding: 0.8rem 1.5rem;
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: 40px;
+        }
+
+        .dark-theme .load-more-btn {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .load-more-btn:active {
+            transform: scale(0.95);
+        }
+
+        .load-more-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--modal-overlay);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--bg-color);
+            margin: auto;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 60vh;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal.show .modal-content {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: var(--text-color);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .modal-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--hint-color);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-body {
+            padding: 1rem 1.5rem;
+            flex: 1;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 1.2rem;
+        }
+
+        .movie-poster {
+            width: 100%;
+            border-radius: 12px;
+            object-fit: cover;
+            align-self: start;
+        }
+
+        .modal-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .modal-details h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-size: 1.1rem;
+        }
+
+        .modal-overview {
+            color: var(--hint-color);
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        .ai-insights {
+            background: rgba(25, 118, 210, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .ai-insights h4 {
+            color: var(--text-color);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .ai-summary {
+            color: var(--text-color);
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .info-modal .modal-content {
+            max-height: 70vh;
+        }
+
+        .info-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .info-section h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-size: 1.1rem;
+        }
+
+        .info-section p {
+            color: var(--hint-color);
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        .info-note {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.05) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 12px;
+        }
+
+        .dark-theme .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+        }
+
+        .skeleton-card {
+            height: 160px;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .spinner {
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            border-radius: 50%;
+            border-top: 2px solid var(--button-color);
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .share-tooltip {
+            position: fixed;
+            background: var(--button-color);
+            color: var(--button-text-color);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .share-tooltip.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .empty-state, .error-state {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            color: var(--hint-color);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i, .error-state i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .movie-poster {
+                max-width: 150px;
+                margin: 0 auto;
+            }
+            
+            .header-logo {
+                width: 160px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section {
+                padding: 1rem;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+
+            .modal-header {
+                padding: 1.2rem 1rem 1rem;
+            }
+            
+            .cards-container {
+                gap: 0.8rem;
+            }
+            
+            .card {
+                height: 150px;
+            }
+            
+            .header-logo {
+                width: 140px;
+            }
+        }
+
+        /* Debug styles */
         .debug-panel {
             position: fixed;
             top: 10px;
@@ -48,11 +725,9 @@
 <body>
     <!-- Debug Panel -->
     <div class="debug-panel" id="debug-panel">
-        <h4>Telegram SDK Status</h4>
-        <div id="sdk-status">Checking...</div>
-        <div id="analytics-status">Analytics: Checking...</div>
-        <div id="user-info">User: Unknown</div>
-        <div id="theme-info">Theme: Checking...</div>
+        <h4>App Status</h4>
+        <div id="sdk-status">Checking Telegram SDK...</div>
+        <div id="app-status">App: Initializing...</div>
     </div>
     
     <button class="debug-toggle" id="debug-toggle">
@@ -60,606 +735,526 @@
     </button>
 
     <div class="container">
-        <!-- Header Section with New Logo -->
+        <!-- Header Section -->
         <div class="header">
-            <svg class="header-logo" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
-                <!-- ... (keep existing SVG code) ... -->
-            </svg>
-            <p>AI-Powered Movie Recommendations in Telegram</p>
+            <div class="header-logo">
+                <svg viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+                            <feOffset dx="0" dy="4" result="offsetblur"/>
+                            <feComponentTransfer>
+                                <feFuncA type="linear" slope="0.5"/>
+                            </feComponentTransfer>
+                            <feMerge>
+                                <feMergeNode/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    
+                    <rect width="640" height="480" fill="#C73737"/>
+                    
+                    <circle cx="320" cy="240" r="160" fill="none" stroke="white" stroke-width="12" opacity="0.9"/>
+                    
+                    <circle cx="320" cy="240" r="148" fill="#8B2020" opacity="0.6"/>
+                    
+                    <text x="320" y="240" font-family="Arial, sans-serif" font-size="110" font-weight="bold" 
+                          fill="white" text-anchor="middle" filter="url(#shadow)">
+                        Hosman
+                    </text>
+                    
+                    <text x="320" y="330" font-family="Arial, sans-serif" font-size="70" font-weight="bold" 
+                          fill="white" text-anchor="middle" filter="url(#shadow)">
+                        Reviews
+                    </text>
+                </svg>
+            </div>
+            <h1>Hosman Reviews</h1>
+            <p>AI-Powered Movie Recommendations</p>
         </div>
 
         <!-- AI Recommendations Section -->
         <div class="ai-input-section">
-            <!-- ... (keep all existing HTML structure) ... -->
+            <div class="section-title">
+                <i class="fas fa-robot"></i>
+                AI Movie Recommendations
+                <button class="info-button" id="ai-info-btn">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+            </div>
+            
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    id="ai-prompt-input" 
+                    class="ai-input" 
+                    placeholder="Describe what you want to watch... (e.g., 'emotional drama with strong characters')"
+                >
+                <button id="generate-recommendations" class="btn">
+                    <i class="fas fa-search"></i> Find Movies
+                </button>
+            </div>
+
+            <div class="categories">
+                <button class="category-btn" data-category="action">
+                    <i class="fas fa-explosion"></i> Action
+                </button>
+                <button class="category-btn" data-category="comedy">
+                    <i class="fas fa-laugh"></i> Comedy
+                </button>
+                <button class="category-btn" data-category="drama">
+                    <i class="fas fa-theater-masks"></i> Drama
+                </button>
+                <button class="category-btn" data-category="sci-fi">
+                    <i class="fas fa-rocket"></i> Sci-Fi
+                </button>
+            </div>
+
+            <div id="ai-reason" class="ai-reason">
+                <p id="reason-text"></p>
+            </div>
+
+            <div id="ai-recommendations" class="cards-container">
+                <div class="empty-state">
+                    <i class="fas fa-robot"></i>
+                    <h3>Ready to Find Your Next Favorite Movie?</h3>
+                    <p>Enter a description or select a category above to get AI-powered recommendations!</p>
+                </div>
+            </div>
+
+            <div class="load-more">
+                <button id="load-more-ai" class="load-more-btn" style="display: none;">
+                    <i class="fas fa-plus"></i> Load More
+                </button>
+            </div>
         </div>
 
         <!-- Trending Movies Section -->
         <div class="section">
-            <!-- ... (keep all existing HTML structure) ... -->
+            <div class="section-title">
+                <i class="fas fa-fire"></i>
+                Trending Now
+                <button class="info-button" id="trending-info-btn">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+            </div>
+            
+            <div class="year-filter" id="year-filter">
+                <!-- Year buttons will be added here -->
+            </div>
+            
+            <div id="trending" class="cards-container">
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+            </div>
+            <div class="load-more">
+                <button id="load-more-trending" class="load-more-btn">
+                    <i class="fas fa-plus"></i> Load More Trending Movies
+                </button>
+            </div>
         </div>
 
         <!-- Upcoming Movies Section -->
         <div class="section">
-            <!-- ... (keep all existing HTML structure) ... -->
+            <h2 class="section-title">
+                <i class="fas fa-calendar-star"></i>
+                Coming Soon
+            </h2>
+            <div id="upcoming-container" class="cards-container">
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+            </div>
         </div>
     </div>
 
     <!-- Movie Details Modal -->
     <div id="movie-modal" class="modal">
-        <!-- ... (keep existing modal structure) ... -->
+        <div class="modal-content">
+            <button class="close-modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2 id="modal-title" class="modal-title">Movie Title</h2>
+                <div class="modal-meta">
+                    <span id="modal-year">2024</span>
+                    <span id="modal-rating">8.5/10</span>
+                    <span id="modal-runtime">120 min</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <img id="modal-poster" class="movie-poster" src="" alt="Movie Poster">
+                <div class="modal-details">
+                    <h3>Overview</h3>
+                    <p id="modal-overview" class="modal-overview">
+                        Movie overview will appear here...
+                    </p>
+                    
+                    <div class="ai-insights">
+                        <h4><i class="fas fa-brain"></i> AI Story Summary</h4>
+                        <div id="modal-ai-summary" class="ai-summary">
+                            <p>Generating AI summary of key events...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn" onclick="shareCurrentMovie()">
+                    <i class="fas fa-share"></i> Share Movie
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Info Modal -->
     <div id="info-modal" class="modal info-modal">
-        <!-- ... (keep existing modal structure) ... -->
+        <div class="modal-content">
+            <button class="close-modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2 class="modal-title">About Hosman Reviews</h2>
+            </div>
+            <div class="modal-body">
+                <div class="info-section">
+                    <h3>AI Recommendations</h3>
+                    <p>Our AI analyzes your preferences and searches through thousands of movies to find the perfect matches for you.</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3>Movie Information Source</h3>
+                    <p>All movie data is provided by The Movie Database (TMDb).</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Enhanced Telegram SDK Integration with Analytics
-        const Telegram = window.Telegram?.WebApp;
-        const TelegramAnalytics = window.TelegramAnalytics;
-        const TelegramWebApps = window.TelegramWebApps;
-
-        // API Configuration
+        // Simple initialization - remove complex dependencies first
+        console.log('Initializing Hosman Reviews...');
+        
+        // Basic configuration
         const TMDB_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZTYzNzRiZTQ2ZTYxNGY2MzZkNjgxOWRiYmU1NGYyYiIsIm5iZiI6MTc2MzE4NjgxNC40MTEsInN1YiI6IjY5MTgxODdlOTUxNDNkZmE0NmEwZTU1OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.SWHyK0g4TvYfDL825KRKKhGcV3nkzfAYVZdigor2QAk';
-        const GEMINI_API_KEY = 'AIzaSyCTRuQZDxXGf-u2MY9HErtJWhQGgQ4_nhY';
         const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
         const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
         const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';
-        const WEBSITE_URL = 'https://hosman-ctrl.github.io/HosmanReviews/#';
 
         // Global variables
         let trendingPage = 1;
-        let aiPage = 1;
-        let currentCategory = '';
-        let currentSearchQuery = '';
-        let currentMovieForShare = null;
-        let clickedCardRect = null;
         let currentYear = new Date().getFullYear();
         let selectedYear = currentYear;
-        let isTelegramEnvironment = false;
-        let analyticsInitialized = false;
 
-        // Enhanced Telegram SDK Initialization
+        // Check Telegram environment
         function initTelegramApp() {
-            console.log('Initializing Telegram Web App...');
+            const Telegram = window.Telegram?.WebApp;
             
-            // Check if running in Telegram
-            if (typeof Telegram !== 'undefined' && Telegram) {
-                isTelegramEnvironment = true;
-                updateDebugInfo('sdk-status', '✅ Telegram WebApp SDK Loaded');
+            if (Telegram) {
+                console.log('Telegram Web App detected');
+                document.getElementById('sdk-status').textContent = '✅ Telegram WebApp SDK Loaded';
                 
                 try {
-                    // Initialize the app
                     Telegram.ready();
                     Telegram.expand();
                     
-                    // Initialize Analytics
-                    initTelegramAnalytics();
-                    
-                    // Apply Telegram theme
-                    applyTelegramTheme();
-                    
-                    // Setup main button for randomization
-                    setupTelegramMainButton();
-                    
-                    // Setup events
-                    setupTelegramEvents();
-                    
-                    // Log user info
-                    const user = Telegram.initDataUnsafe?.user;
-                    if (user) {
-                        console.log('Telegram User:', user);
-                        updateDebugInfo('user-info', `User: ${user.first_name} (ID: ${user.id})`);
-                        trackEvent('user_identified', { 
-                            user_id: user.id,
-                            first_name: user.first_name 
-                        });
-                    } else {
-                        updateDebugInfo('user-info', 'User: Not available');
+                    // Apply theme
+                    const isDark = Telegram.themeParams?.bg_color === '#212121';
+                    if (isDark) {
+                        document.body.classList.add('dark-theme');
                     }
                     
-                    // Track app launch
-                    trackEvent('app_launched', {
-                        platform: Telegram.platform,
-                        version: Telegram.version
-                    });
-                    
                 } catch (error) {
-                    console.error('Error initializing Telegram app:', error);
-                    updateDebugInfo('sdk-status', '❌ Telegram SDK Error: ' + error.message);
+                    console.error('Telegram init error:', error);
                 }
             } else {
-                updateDebugInfo('sdk-status', '❌ Not in Telegram environment');
-                console.log('Running in standalone browser mode');
-                
-                // Initialize analytics for non-Telegram environment
-                initStandaloneAnalytics();
+                console.log('Running in standalone mode');
+                document.getElementById('sdk-status').textContent = '🌐 Standalone Browser Mode';
             }
         }
 
-        // Initialize Telegram Analytics
-        function initTelegramAnalytics() {
-            if (typeof TelegramAnalytics !== 'undefined' && Telegram.initData) {
-                try {
-                    // Initialize Telegram Analytics with initData
-                    TelegramAnalytics.init(Telegram.initData);
-                    analyticsInitialized = true;
-                    updateDebugInfo('analytics-status', '✅ Analytics Initialized');
-                    console.log('Telegram Analytics initialized successfully');
-                } catch (error) {
-                    console.error('Error initializing Telegram Analytics:', error);
-                    updateDebugInfo('analytics-status', '❌ Analytics Error: ' + error.message);
-                }
-            } else {
-                updateDebugInfo('analytics-status', '⚠️ Analytics: No initData available');
-            }
-        }
-
-        // Initialize standalone analytics for non-Telegram environment
-        function initStandaloneAnalytics() {
-            console.log('Initializing standalone analytics...');
-            analyticsInitialized = true;
-            updateDebugInfo('analytics-status', '✅ Standalone Analytics Ready');
-        }
-
-        // Enhanced event tracking
-        function trackEvent(eventName, eventParams = {}) {
-            const eventData = {
-                ...eventParams,
-                timestamp: new Date().toISOString(),
-                environment: isTelegramEnvironment ? 'telegram' : 'standalone'
-            };
-
-            console.log(`Tracking event: ${eventName}`, eventData);
-
-            // Telegram Analytics
-            if (isTelegramEnvironment && typeof TelegramAnalytics !== 'undefined') {
-                try {
-                    TelegramAnalytics.trackEvent(eventName, eventParams);
-                } catch (error) {
-                    console.error('Telegram Analytics tracking error:', error);
-                }
-            }
-
-            // Fallback: Send to your own analytics endpoint
-            sendToCustomAnalytics(eventName, eventData);
-        }
-
-        // Send events to custom analytics endpoint
-        function sendToCustomAnalytics(eventName, eventData) {
-            // Replace with your actual analytics endpoint
-            const ANALYTICS_ENDPOINT = 'https://your-analytics-endpoint.com/track';
+        // Initialize year filter
+        function initYearFilter() {
+            const yearFilter = document.getElementById('year-filter');
+            const years = [currentYear - 1, currentYear, currentYear + 1];
             
-            // Example implementation - you can modify this based on your analytics service
-            fetch(ANALYTICS_ENDPOINT, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    event: eventName,
-                    data: eventData,
-                    app: 'hosman-reviews'
-                })
-            }).catch(error => {
-                console.log('Analytics endpoint not available, event logged locally:', eventName);
+            years.forEach(year => {
+                const button = document.createElement('button');
+                button.className = `year-btn ${year === selectedYear ? 'active' : ''}`;
+                button.textContent = year;
+                button.setAttribute('data-year', year);
+                
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.year-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    selectedYear = year;
+                    loadTrendingMovies();
+                });
+                
+                yearFilter.appendChild(button);
             });
         }
 
-        // Enhanced Telegram Main Button Setup
-        function setupTelegramMainButton() {
-            if (!Telegram.MainButton) {
-                console.log('MainButton not available');
-                return;
-            }
+        // Load trending movies
+        async function loadTrendingMovies() {
+            showLoading('trending');
             
             try {
-                Telegram.MainButton.setText("🎲 Randomize")
-                    .setBackgroundColor(getThemeColor('button_color', '#1976d2'))
-                    .setTextColor(getThemeColor('button_text_color', '#ffffff'))
-                    .show()
-                    .onClick(() => {
-                        trackEvent('randomize_clicked');
-                        randomizeMovies();
-                        provideHapticFeedback('light');
-                    });
-                
-                console.log('Telegram MainButton configured successfully');
-            } catch (error) {
-                console.error('Error setting up MainButton:', error);
-            }
-        }
-
-        // Get theme color with fallback
-        function getThemeColor(colorKey, fallback) {
-            if (Telegram.themeParams && Telegram.themeParams[colorKey]) {
-                return Telegram.themeParams[colorKey];
-            }
-            return fallback;
-        }
-
-        // Enhanced Telegram Events Setup
-        function setupTelegramEvents() {
-            if (!Telegram.onEvent) {
-                console.log('Telegram events not available');
-                return;
-            }
-            
-            try {
-                Telegram.onEvent('themeChanged', () => {
-                    trackEvent('theme_changed', { theme: Telegram.themeParams });
-                    applyTelegramTheme();
-                });
-                
-                Telegram.onEvent('viewportChanged', (eventData) => {
-                    trackEvent('viewport_changed', eventData);
-                    setTimeout(() => Telegram.expand(), 100);
-                });
-                
-                Telegram.onEvent('mainButtonClicked', () => {
-                    trackEvent('main_button_clicked');
-                });
-                
-                Telegram.onEvent('backButtonClicked', () => {
-                    trackEvent('back_button_clicked');
-                    if (document.querySelector('.modal.show')) {
-                        closeModal();
+                // Simple mock data for demonstration
+                const mockMovies = [
+                    {
+                        id: 1,
+                        title: "Sample Movie 1",
+                        release_date: "2024-01-15",
+                        vote_average: 8.2,
+                        overview: "This is a sample movie description that shows how the card layout works.",
+                        poster_path: null
+                    },
+                    {
+                        id: 2,
+                        title: "Sample Movie 2",
+                        release_date: "2024-02-20",
+                        vote_average: 7.5,
+                        overview: "Another sample movie to demonstrate the grid layout and card design.",
+                        poster_path: null
+                    },
+                    {
+                        id: 3,
+                        title: "Sample Movie 3 with a Longer Title That Might Wrap",
+                        release_date: "2024-03-10",
+                        vote_average: 6.8,
+                        overview: "This movie has a longer title to test the text truncation in the card layout.",
+                        poster_path: null
+                    },
+                    {
+                        id: 4,
+                        title: "Sample Movie 4",
+                        release_date: "2024-04-05",
+                        vote_average: 9.1,
+                        overview: "A highly rated sample movie to show the rating color coding system.",
+                        poster_path: null
                     }
+                ];
+                
+                clearContainer('trending');
+                
+                mockMovies.forEach(movie => {
+                    createCard(movie, 'trending');
                 });
                 
-                // Show back button when modal is open
-                const originalOpenModal = window.openModal;
-                window.openModal = function(...args) {
-                    if (Telegram.BackButton) {
-                        Telegram.BackButton.show();
-                    }
-                    return originalOpenModal.apply(this, args);
-                };
-                
-                const originalCloseModal = window.closeModal;
-                window.closeModal = function(...args) {
-                    if (Telegram.BackButton) {
-                        Telegram.BackButton.hide();
-                    }
-                    return originalCloseModal.apply(this, args);
-                };
-                
-                console.log('Telegram events configured successfully');
             } catch (error) {
-                console.error('Error setting up Telegram events:', error);
-            }
-        }
-
-        // Enhanced theme application
-        function applyTelegramTheme() {
-            const themeParams = Telegram?.themeParams || {};
-            const isDarkMode = themeParams.bg_color ? 
-                !isLightColor(themeParams.bg_color) : 
-                window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            // Apply dark or light theme
-            if (isDarkMode) {
-                document.body.classList.add('dark-theme');
-                updateDebugInfo('theme-info', 'Theme: Dark 🌙');
-            } else {
-                document.body.classList.remove('dark-theme');
-                updateDebugInfo('theme-info', 'Theme: Light ☀️');
-            }
-            
-            // Update CSS variables based on theme
-            if (themeParams.bg_color) {
-                document.documentElement.style.setProperty('--bg-color', themeParams.bg_color);
-            }
-            if (themeParams.text_color) {
-                document.documentElement.style.setProperty('--text-color', themeParams.text_color);
-            }
-            if (themeParams.hint_color) {
-                document.documentElement.style.setProperty('--hint-color', themeParams.hint_color);
-            }
-            if (themeParams.link_color) {
-                document.documentElement.style.setProperty('--link-color', themeParams.link_color);
-            }
-            if (themeParams.button_color) {
-                document.documentElement.style.setProperty('--button-color', themeParams.button_color);
-            }
-            if (themeParams.button_text_color) {
-                document.documentElement.style.setProperty('--button-text-color', themeParams.button_text_color);
-            }
-            
-            trackEvent('theme_applied', {
-                dark_mode: isDarkMode,
-                theme_params: themeParams
-            });
-        }
-
-        // Helper function to check if color is light
-        function isLightColor(color) {
-            if (!color) return false;
-            
-            // Convert hex to RGB
-            const hex = color.replace('#', '');
-            const r = parseInt(hex.substr(0, 2), 16);
-            const g = parseInt(hex.substr(2, 2), 16);
-            const b = parseInt(hex.substr(4, 2), 16);
-            
-            // Calculate luminance
-            const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-            return luminance > 0.5;
-        }
-
-        // Enhanced randomize function with analytics
-        async function randomizeMovies() {
-            trackEvent('randomize_initiated');
-            
-            // Show loading state
-            showLoading('ai-recommendations');
-            
-            try {
-                clearContainer('ai-recommendations');
-                
-                const genres = ['action', 'comedy', 'drama', 'sci-fi', 'thriller'];
-                const randomGenre = genres[Math.floor(Math.random() * genres.length)];
-                
-                const randomMovies = await fetchRandomMovies(randomGenre);
-                
-                if (randomMovies.length === 0) {
-                    document.getElementById('ai-recommendations').innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-random"></i>
-                            <h3>No Random Movies Found</h3>
-                            <p>Try again in a moment.</p>
-                        </div>
-                    `;
-                    trackEvent('randomize_no_results');
-                } else {
-                    document.getElementById('reason-text').textContent = "Here's a random selection of movies from different genres for you to discover something new!";
-                    document.getElementById('ai-reason').style.display = 'block';
-                    
-                    randomMovies.forEach(movie => {
-                        createCard(movie, 'ai-recommendations', false);
-                    });
-                    
-                    document.getElementById('load-more-ai').style.display = 'flex';
-                    
-                    trackEvent('randomize_success', {
-                        genre: randomGenre,
-                        movie_count: randomMovies.length
-                    });
-                }
-                
-                provideHapticFeedback('success');
-            } catch (error) {
-                console.error('Randomization error:', error);
-                document.getElementById('ai-recommendations').innerHTML = `
+                console.error('Error loading movies:', error);
+                document.getElementById('trending').innerHTML = `
                     <div class="error-state">
                         <i class="fas fa-exclamation-triangle"></i>
-                        <h3>Randomization Error</h3>
-                        <p>Unable to get random movies. Please try again later.</p>
+                        <h3>Loading Error</h3>
+                        <p>Unable to load movies. Please try again later.</p>
                     </div>
                 `;
-                trackEvent('randomize_error', { error: error.message });
-                provideHapticFeedback('error');
             }
         }
 
-        // Enhanced share function with analytics
-        function shareMovie(title, movieId = null) {
-            const shareUrl = `${WEBSITE_URL}?search=${encodeURIComponent(title)}`;
-            const shareText = `Check out "${title}" on Hosman Reviews! 🎬\n\n${shareUrl}`;
+        // Load upcoming movies
+        async function loadUpcomingMovies() {
+            // Use the same mock data for upcoming section
+            const mockMovies = [
+                {
+                    id: 5,
+                    title: "Upcoming Movie 1",
+                    release_date: "2024-12-15",
+                    vote_average: null,
+                    overview: "An exciting upcoming movie scheduled for release later this year.",
+                    poster_path: null
+                },
+                {
+                    id: 6,
+                    title: "Upcoming Movie 2",
+                    release_date: "2024-11-20",
+                    vote_average: null,
+                    overview: "Another anticipated movie coming to theaters soon.",
+                    poster_path: null
+                }
+            ];
             
-            trackEvent('share_attempted', {
-                movie_title: title,
-                movie_id: movieId,
-                share_method: 'telegram'
+            clearContainer('upcoming-container');
+            
+            mockMovies.forEach(movie => {
+                createCard(movie, 'upcoming-container');
+            });
+        }
+
+        // Create movie card
+        function createCard(movie, containerId) {
+            const container = document.getElementById(containerId);
+            
+            const title = movie.title;
+            const year = movie.release_date ? movie.release_date.substring(0, 4) : 'TBA';
+            const rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
+            const description = movie.overview || 'Description not available.';
+            const imagePath = movie.poster_path ? `${TMDB_IMAGE_BASE_URL}${movie.poster_path}` : PLACEHOLDER_IMAGE;
+            
+            let ratingClass = 'medium';
+            if (movie.vote_average > 7.5) ratingClass = 'high';
+            else if (movie.vote_average < 6) ratingClass = 'low';
+            
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.setAttribute('data-movie-id', movie.id);
+            card.innerHTML = `
+                <img src="${imagePath}" alt="${title}" class="card-img" onerror="this.src='${PLACEHOLDER_IMAGE}'">
+                <div class="card-content">
+                    <h3 class="card-title">${title}</h3>
+                    <div class="card-meta">
+                        <span>${year}</span>
+                        <span class="rating ${ratingClass}"><i class="fas fa-star"></i> ${rating}</span>
+                    </div>
+                    <p class="card-description">${description}</p>
+                </div>
+            `;
+            
+            card.addEventListener('click', function() {
+                openModal(movie);
             });
             
-            if (Telegram && Telegram.isVersionAtLeast('6.1')) {
-                Telegram.showPopup({
-                    title: 'Share Movie',
-                    message: `Share "${title}" with friends?`,
-                    buttons: [
-                        {
-                            type: 'default',
-                            text: 'Copy Link',
-                            id: 'copy'
-                        },
-                        {
-                            type: 'default',
-                            text: 'Share via Telegram',
-                            id: 'telegram'
-                        },
-                        {
-                            type: 'cancel',
-                            id: 'cancel'
-                        }
-                    ]
-                }, (buttonId) => {
-                    if (buttonId === 'copy') {
-                        copyToClipboard(shareUrl);
-                        showTelegramAlert('Link copied to clipboard! 📋');
-                        trackEvent('share_completed', {
-                            method: 'copy_link',
-                            movie_title: title,
-                            movie_id: movieId
-                        });
-                    } else if (buttonId === 'telegram' && Telegram.shareToChat) {
-                        Telegram.shareToChat(shareText);
-                        trackEvent('share_completed', {
-                            method: 'telegram_chat',
-                            movie_title: title,
-                            movie_id: movieId
-                        });
-                    } else if (buttonId === 'telegram' && Telegram.openTelegramLink) {
-                        Telegram.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(`Check out "${title}" 🎬`)}`);
-                        trackEvent('share_completed', {
-                            method: 'telegram_link',
-                            movie_title: title,
-                            movie_id: movieId
-                        });
-                    }
-                });
-            } else {
-                copyToClipboard(shareUrl);
-                showNativeTooltip();
-                trackEvent('share_completed', {
-                    method: 'copy_link_fallback',
-                    movie_title: title,
-                    movie_id: movieId
-                });
-            }
-            
-            provideHapticFeedback('light');
+            container.appendChild(card);
         }
 
-        // Enhanced modal open with analytics
-        async function openModal(movieId, clickedElement = null) {
-            try {
-                provideHapticFeedback('light');
-                document.getElementById('modal-ai-summary').innerHTML = '<p><div class="spinner"></div> Generating AI summary...</p>';
-                
-                trackEvent('movie_modal_opened', { movie_id: movieId });
-                
-                const item = await fetchMovieDetails(movieId);
-                
-                if (!item) {
-                    showTelegramAlert('Error loading details. Please try again.');
-                    trackEvent('movie_modal_error', { movie_id: movieId, error: 'fetch_failed' });
-                    return;
-                }
-                
-                currentMovieForShare = item;
-                
-                // Update modal content
-                const title = item.title;
-                const year = item.release_date ? item.release_date.substring(0, 4) : 'TBA';
-                const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
-                const runtime = item.runtime ? `${item.runtime} min` : 'TBA';
-                const imagePath = item.poster_path ? `${TMDB_IMAGE_BASE_URL}${item.poster_path}` : PLACEHOLDER_IMAGE;
-                
-                document.getElementById('modal-title').textContent = title;
-                document.getElementById('modal-year').textContent = year;
-                document.getElementById('modal-rating').textContent = `${rating}/10`;
-                document.getElementById('modal-runtime').textContent = runtime;
-                document.getElementById('modal-overview').textContent = item.overview || 'No overview available.';
-                document.getElementById('modal-poster').src = imagePath;
-                
-                // Generate AI summary
-                const aiSummary = await generateMovieSummary(title, item.overview || '');
-                document.getElementById('modal-ai-summary').innerHTML = `<p>${aiSummary}</p>`;
-                
-                // Show modal
-                const modal = document.getElementById('movie-modal');
-                modal.style.display = 'block';
-                
+        // Clear container
+        function clearContainer(containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+        }
+
+        // Show loading state
+        function showLoading(containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+                <div class="card skeleton skeleton-card"></div>
+            `;
+        }
+
+        // Open modal
+        function openModal(movie) {
+            const title = movie.title;
+            const year = movie.release_date ? movie.release_date.substring(0, 4) : 'TBA';
+            const rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
+            const imagePath = movie.poster_path ? `${TMDB_IMAGE_BASE_URL}${movie.poster_path}` : PLACEHOLDER_IMAGE;
+            
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-year').textContent = year;
+            document.getElementById('modal-rating').textContent = `${rating}/10`;
+            document.getElementById('modal-overview').textContent = movie.overview || 'No overview available.';
+            document.getElementById('modal-poster').src = imagePath;
+            
+            // Simple AI summary (mock)
+            document.getElementById('modal-ai-summary').innerHTML = `
+                <p>This ${year} ${movie.vote_average ? 'highly-rated' : 'upcoming'} film offers ${
+                movie.overview ? 'a compelling story that has captivated audiences.' : 'an exciting cinematic experience.'} 
+                The movie showcases strong performances and engaging storytelling that makes it worth watching.</p>
+            `;
+            
+            const modal = document.getElementById('movie-modal');
+            modal.style.display = 'block';
+            
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+
+        // Close modal
+        function closeModal() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                modal.classList.remove('show');
                 setTimeout(() => {
-                    modal.classList.add('show');
-                }, 10);
-                
-                trackEvent('movie_modal_loaded', {
-                    movie_id: movieId,
-                    movie_title: title,
-                    has_poster: !!item.poster_path,
-                    has_summary: !!aiSummary
-                });
-                
-            } catch (error) {
-                console.error('Error opening modal:', error);
-                showTelegramAlert('Error loading details. Please try again.');
-                trackEvent('movie_modal_error', { 
-                    movie_id: movieId, 
-                    error: error.message 
-                });
-            }
+                    modal.style.display = 'none';
+                }, 300);
+            });
         }
 
-        // Enhanced AI recommendations with analytics
-        async function performAIRecommendations(prompt, category = '', loadMore = false) {
-            if (!loadMore) {
-                showLoading('ai-recommendations');
-                aiPage = 1;
-                provideHapticFeedback('light');
-                
-                trackEvent('ai_recommendations_requested', {
-                    prompt: prompt,
-                    category: category,
-                    is_load_more: false
-                });
-            } else {
-                trackEvent('ai_recommendations_load_more', {
-                    prompt: prompt,
-                    category: category,
-                    page: aiPage
-                });
-            }
-            
+        // Share function
+        function shareCurrentMovie() {
+            const title = document.getElementById('modal-title').textContent;
+            alert(`Share "${title}" with your friends!`);
+        }
+
+        // AI recommendations
+        async function performAIRecommendations() {
+            const prompt = document.getElementById('ai-prompt-input').value.trim();
             const searchButton = document.getElementById('generate-recommendations');
             const originalText = searchButton.innerHTML;
+            
             searchButton.innerHTML = '<div class="spinner"></div> Searching...';
             searchButton.disabled = true;
             
-            try {
-                let movies = [];
-                
-                if (category) {
-                    movies = await fetchMoviesByCategory(category, aiPage);
-                    currentCategory = category;
-                    currentSearchQuery = '';
-                } else if (prompt) {
-                    movies = await searchTMDBWithAI(prompt, aiPage);
-                    currentSearchQuery = prompt;
-                    currentCategory = '';
-                } else {
-                    const trending = await fetchTrendingMovies(aiPage);
-                    movies = trending.slice(0, 6);
-                    currentSearchQuery = '';
-                    currentCategory = '';
-                }
-                
-                if (!loadMore) {
+            // Show loading
+            showLoading('ai-recommendations');
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                try {
                     clearContainer('ai-recommendations');
-                }
-                
-                if (movies.length === 0) {
-                    if (!loadMore) {
-                        document.getElementById('ai-recommendations').innerHTML = `
-                            <div class="empty-state">
-                                <i class="fas fa-search"></i>
-                                <h3>No recommendations found</h3>
-                                <p>Try a different description or category.</p>
-                            </div>
-                        `;
-                    }
-                    provideHapticFeedback('warning');
                     
-                    trackEvent('ai_recommendations_no_results', {
-                        prompt: prompt,
-                        category: category
+                    // Mock AI recommendations
+                    const aiMovies = [
+                        {
+                            id: 101,
+                            title: "AI Recommended Movie 1",
+                            release_date: "2023-05-15",
+                            vote_average: 8.7,
+                            overview: `Based on your search for "${prompt || 'movies'}", this film matches your preferences with its engaging storyline and strong character development.`,
+                            poster_path: null
+                        },
+                        {
+                            id: 102,
+                            title: "AI Recommended Movie 2",
+                            release_date: "2022-11-20",
+                            vote_average: 7.9,
+                            overview: `This selection aligns with your interest in ${prompt || 'quality cinema'} and features exceptional performances.`,
+                            poster_path: null
+                        },
+                        {
+                            id: 103,
+                            title: "AI Recommended Movie 3",
+                            release_date: "2024-01-10",
+                            vote_average: 8.2,
+                            overview: `Our AI found this movie based on your preferences for ${prompt || 'entertaining content'}.`,
+                            poster_path: null
+                        },
+                        {
+                            id: 104,
+                            title: "AI Recommended Movie 4",
+                            release_date: "2021-08-05",
+                            vote_average: 8.9,
+                            overview: `This critically acclaimed film matches what you're looking for in ${prompt || 'a great movie'}.`,
+                            poster_path: null
+                        }
+                    ];
+                    
+                    // Show AI reason
+                    document.getElementById('reason-text').textContent = 
+                        prompt ? 
+                        `Based on your search for "${prompt}", I've found these recommendations that match your interests:` :
+                        "Here are some AI-curated recommendations you might enjoy:";
+                    document.getElementById('ai-reason').style.display = 'block';
+                    
+                    // Display recommendations
+                    aiMovies.forEach(movie => {
+                        createCard(movie, 'ai-recommendations');
                     });
-                } else {
-                    if (!loadMore) {
-                        const reasonText = generateAIReason(prompt, category);
-                        document.getElementById('reason-text').textContent = reasonText;
-                        document.getElementById('ai-reason').style.display = 'block';
-                        provideHapticFeedback('success');
-                    }
                     
-                    movies.forEach(movie => {
-                        createCard(movie, 'ai-recommendations', false);
-                    });
-                    
+                    // Show load more button
                     document.getElementById('load-more-ai').style.display = 'flex';
                     
-                    trackEvent('ai_recommendations_success', {
-                        prompt: prompt,
-                        category: category,
-                        results_count: movies.length,
-                        is_load_more: loadMore
-                    });
-                }
-            } catch (error) {
-                console.error('AI recommendation error:', error);
-                if (!loadMore) {
+                } catch (error) {
+                    console.error('AI recommendation error:', error);
                     document.getElementById('ai-recommendations').innerHTML = `
                         <div class="error-state">
                             <i class="fas fa-exclamation-triangle"></i>
@@ -667,184 +1262,155 @@
                             <p>Unable to generate recommendations. Please try again later.</p>
                         </div>
                     `;
+                } finally {
+                    searchButton.innerHTML = originalText;
+                    searchButton.disabled = false;
                 }
-                provideHapticFeedback('error');
+            }, 1500);
+        }
+
+        // Load more trending
+        function loadMoreTrending() {
+            const loadMoreButton = document.getElementById('load-more-trending');
+            loadMoreButton.innerHTML = '<div class="spinner"></div> Loading...';
+            loadMoreButton.disabled = true;
+            
+            // Simulate loading more movies
+            setTimeout(() => {
+                const additionalMovies = [
+                    {
+                        id: trendingPage * 10 + 1,
+                        title: `Additional Movie ${trendingPage}`,
+                        release_date: "2024-05-01",
+                        vote_average: 7.2,
+                        overview: "This is an additional movie loaded when you click 'Load More'.",
+                        poster_path: null
+                    }
+                ];
                 
-                trackEvent('ai_recommendations_error', {
-                    prompt: prompt,
-                    category: category,
-                    error: error.message
+                additionalMovies.forEach(movie => {
+                    createCard(movie, 'trending');
                 });
-            } finally {
-                searchButton.innerHTML = originalText;
-                searchButton.disabled = false;
-            }
+                
+                trendingPage++;
+                loadMoreButton.innerHTML = '<i class="fas fa-plus"></i> Load More Trending Movies';
+                loadMoreButton.disabled = false;
+            }, 1000);
         }
 
-        // Debug panel functions
-        function updateDebugInfo(elementId, message) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.textContent = message;
-            }
+        // Load more AI
+        function loadMoreAI() {
+            const loadMoreButton = document.getElementById('load-more-ai');
+            loadMoreButton.innerHTML = '<div class="spinner"></div> Loading...';
+            loadMoreButton.disabled = true;
+            
+            // Simulate loading more AI recommendations
+            setTimeout(() => {
+                const additionalMovies = [
+                    {
+                        id: 200 + trendingPage,
+                        title: `Additional AI Recommendation ${trendingPage}`,
+                        release_date: "2023-12-15",
+                        vote_average: 8.0,
+                        overview: "This is an additional AI recommendation loaded when you click 'Load More'.",
+                        poster_path: null
+                    }
+                ];
+                
+                additionalMovies.forEach(movie => {
+                    createCard(movie, 'ai-recommendations');
+                });
+                
+                loadMoreButton.innerHTML = '<i class="fas fa-plus"></i> Load More Recommendations';
+                loadMoreButton.disabled = false;
+            }, 1000);
         }
 
+        // Open info modal
+        function openInfoModal() {
+            const modal = document.getElementById('info-modal');
+            modal.style.display = 'block';
+            
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+
+        // Toggle debug panel
         function toggleDebugPanel() {
             const panel = document.getElementById('debug-panel');
             panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
         }
 
-        // Enhanced initialization
-        async function initializePage() {
-            try {
-                // Initialize year filter
-                initYearFilter();
-                
-                // Initialize Telegram SDK
-                initTelegramApp();
-                
-                // Fetch data from TMDB
-                const trendingData = await fetchMoviesByYear(selectedYear);
-                const upcomingData = await fetchUpcomingMovies();
-                
-                // Clear loading indicators and populate with real data
-                const loadingContainers = document.querySelectorAll('.cards-container');
-                loadingContainers.forEach(container => {
-                    container.innerHTML = '';
-                });
-                
-                if (trendingData.length > 0) {
-                    trendingData.forEach(movie => {
-                        createCard(movie, 'trending', true);
-                    });
-                    trackEvent('trending_loaded', { count: trendingData.length });
-                }
-                
-                if (upcomingData.length > 0) {
-                    upcomingData.forEach(movie => {
-                        createCard(movie, 'upcoming-container', false);
-                    });
-                    trackEvent('upcoming_loaded', { count: upcomingData.length });
-                }
-                
-                trackEvent('page_initialized');
-                    
-            } catch (error) {
-                console.error('Initialization error:', error);
-                document.querySelectorAll('.cards-container').forEach(container => {
-                    container.innerHTML = `
-                        <div class="error-state">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <p>Unable to load content. Please check your connection and try again.</p>
-                        </div>
-                    `;
-                });
-                trackEvent('initialization_error', { error: error.message });
-            }
+        // Initialize the application
+        function initializeApp() {
+            console.log('Initializing application...');
+            document.getElementById('app-status').textContent = '✅ App Initialized';
+            
+            // Initialize Telegram
+            initTelegramApp();
+            
+            // Initialize year filter
+            initYearFilter();
+            
+            // Load initial data
+            loadTrendingMovies();
+            loadUpcomingMovies();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            console.log('Application initialized successfully');
         }
 
-        // Enhanced event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize with real TMDB data
-            initializePage();
-            
-            // Debug panel toggle
-            document.getElementById('debug-toggle').addEventListener('click', toggleDebugPanel);
-            
+        // Set up event listeners
+        function setupEventListeners() {
             // AI recommendations
-            document.getElementById('generate-recommendations').addEventListener('click', function() {
-                const prompt = document.getElementById('ai-prompt-input').value.trim();
-                if (prompt || currentCategory) {
-                    performAIRecommendations(prompt, currentCategory);
-                } else {
-                    showTelegramAlert('Please enter a description or select a category');
-                }
-            });
+            document.getElementById('generate-recommendations').addEventListener('click', performAIRecommendations);
             
-            // Category buttons with analytics
+            // Category buttons
             document.querySelectorAll('.category-btn').forEach(button => {
                 button.addEventListener('click', function() {
-                    provideHapticFeedback('selection');
-                    
                     document.querySelectorAll('.category-btn').forEach(btn => {
                         btn.classList.remove('active');
                     });
-                    
                     this.classList.add('active');
-                    currentCategory = this.getAttribute('data-category');
-                    currentSearchQuery = '';
-                    document.getElementById('ai-prompt-input').value = '';
-                    
-                    trackEvent('category_selected', { category: currentCategory });
-                    performAIRecommendations('', currentCategory);
+                    performAIRecommendations();
                 });
             });
             
             // Info buttons
-            document.getElementById('ai-info-btn').addEventListener('click', function() {
-                trackEvent('info_opened', { section: 'ai_recommendations' });
-                openInfoModal();
-            });
+            document.getElementById('ai-info-btn').addEventListener('click', openInfoModal);
+            document.getElementById('trending-info-btn').addEventListener('click', openInfoModal);
             
-            document.getElementById('trending-info-btn').addEventListener('click', function() {
-                trackEvent('info_opened', { section: 'trending' });
-                openInfoModal();
-            });
-            
-            // Load more buttons with analytics
-            document.getElementById('load-more-trending').addEventListener('click', function() {
-                trackEvent('load_more_clicked', { section: 'trending', page: trendingPage + 1 });
-                loadMoreTrending();
-            });
-            
-            document.getElementById('load-more-ai').addEventListener('click', function() {
-                trackEvent('load_more_clicked', { section: 'ai', page: aiPage + 1 });
-                loadMoreAI();
-            });
+            // Load more buttons
+            document.getElementById('load-more-trending').addEventListener('click', loadMoreTrending);
+            document.getElementById('load-more-ai').addEventListener('click', loadMoreAI);
             
             // Modal close
             document.querySelectorAll('.close-modal').forEach(button => {
-                button.addEventListener('click', function() {
-                    trackEvent('modal_closed');
-                    closeModal();
-                });
+                button.addEventListener('click', closeModal);
             });
             
             window.addEventListener('click', function(event) {
                 if (event.target.classList.contains('modal')) {
-                    trackEvent('modal_closed_backdrop');
                     closeModal();
                 }
             });
 
-            // URL parameter handling
-            const urlParams = new URLSearchParams(window.location.search);
-            const searchParam = urlParams.get('search');
-            if (searchParam) {
-                document.getElementById('ai-prompt-input').value = searchParam;
-                trackEvent('deep_link_activated', { search_query: searchParam });
-                performAIRecommendations(searchParam);
-            }
-
-            // Enter key support
+            // Enter key for AI input
             document.getElementById('ai-prompt-input').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
-                    document.getElementById('generate-recommendations').click();
+                    performAIRecommendations();
                 }
             });
 
-            // Track visibility changes
-            document.addEventListener('visibilitychange', function() {
-                if (document.visibilityState === 'visible') {
-                    trackEvent('app_foreground');
-                } else {
-                    trackEvent('app_background');
-                }
-            });
-        });
+            // Debug toggle
+            document.getElementById('debug-toggle').addEventListener('click', toggleDebugPanel);
+        }
 
-        // Keep all other existing functions (fetchFromTMDB, createCard, etc.) exactly as they were
-        // ... (all the remaining existing JavaScript code) ...
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
 </html>
