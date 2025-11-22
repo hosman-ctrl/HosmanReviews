@@ -71,6 +71,8 @@
             height: auto;
             margin: 0 auto 1rem;
             display: block;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .header h1 {
@@ -754,37 +756,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <svg class="header-logo" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
-                        <feOffset dx="0" dy="4" result="offsetblur"/>
-                        <feComponentTransfer>
-                            <feFuncA type="linear" slope="0.5"/>
-                        </feComponentTransfer>
-                        <feMerge>
-                            <feMergeNode/>
-                            <feMergeNode in="SourceGraphic"/>
-                        </feMerge>
-                    </filter>
-                </defs>
-                
-                <rect width="640" height="480" fill="#C73737"/>
-                
-                <circle cx="320" cy="240" r="160" fill="none" stroke="white" stroke-width="12" opacity="0.9"/>
-                
-                <circle cx="320" cy="240" r="148" fill="#8B2020" opacity="0.6"/>
-                
-                <text x="320" y="240" font-family="'Brush Script MT', cursive, serif" font-size="110" font-weight="bold" 
-                      fill="white" text-anchor="middle" filter="url(#shadow)" font-style="italic">
-                    Hosman
-                </text>
-                
-                <text x="320" y="330" font-family="'Brush Script MT', cursive, serif" font-size="70" font-weight="bold" 
-                      fill="white" text-anchor="middle" filter="url(#shadow)" font-style="italic">
-                    Reviews
-                </text>
-            </svg>
+            <img src="https://t.me/i/hosman_reviews_logo" alt="Hosman Reviews" class="header-logo" onerror="this.src='https://via.placeholder.com/200x200/0088cc/ffffff?text=Hosman+Reviews'">
+            <h1>Hosman Reviews</h1>
             <p>AI-Powered Movie Recommendations in Telegram</p>
         </div>
 
@@ -1178,7 +1151,7 @@
             });
         }
 
-        // Load trending movies by selected year - MODIFIED TO SORT BY RANKING
+        // Load trending movies by selected year - MODIFIED WITH NEW SORTING LOGIC
         async function loadTrendingMoviesByYear() {
             showLoading('trending');
             trendingPage = 1;
@@ -1197,8 +1170,20 @@
                         </div>
                     `;
                 } else {
-                    // Sort movies by rating (highest first)
-                    const sortedMovies = movies.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+                    // Apply different sorting based on year
+                    let sortedMovies;
+                    if (selectedYear <= currentYear) {
+                        // Previous years: sort by rating (highest first)
+                        sortedMovies = movies.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+                    } else {
+                        // Future years: sort by release date (newest first)
+                        sortedMovies = movies.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
+                    }
+                    
+                    // For current year: sort by release date (newest first)
+                    if (selectedYear === currentYear) {
+                        sortedMovies = movies.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
+                    }
                     
                     sortedMovies.forEach(movie => {
                         createCard(movie, 'trending', true);
@@ -1217,10 +1202,24 @@
             }
         }
 
-        // Fetch movies by year - MODIFIED TO SORT BY VOTE AVERAGE
+        // Fetch movies by year - MODIFIED WITH VOTE COUNT AND SORTING LOGIC
         async function fetchMoviesByYear(year, page = 1) {
-            // Sort by vote average in descending order to show highest rated first
-            const data = await fetchFromTMDB(`/discover/movie?primary_release_year=${year}&sort_by=vote_average.desc&vote_count.gte=50&page=${page}`);
+            let endpoint;
+            
+            if (year <= currentYear) {
+                // Previous years: sort by vote average with high vote count
+                endpoint = `/discover/movie?primary_release_year=${year}&sort_by=vote_average.desc&vote_count.gte=100000&page=${page}`;
+            } else {
+                // Future years: sort by primary release date
+                endpoint = `/discover/movie?primary_release_year=${year}&sort_by=primary_release_date.desc&page=${page}`;
+            }
+            
+            // For current year: sort by primary release date
+            if (year === currentYear) {
+                endpoint = `/discover/movie?primary_release_year=${year}&sort_by=primary_release_date.desc&page=${page}`;
+            }
+            
+            const data = await fetchFromTMDB(endpoint);
             if (data && data.results) {
                 return data.results;
             }
@@ -1714,8 +1713,20 @@
                 const additionalMovies = await fetchMoviesByYear(selectedYear, trendingPage);
                 
                 if (additionalMovies.length > 0) {
-                    // Sort additional movies by rating
-                    const sortedMovies = additionalMovies.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+                    // Apply different sorting based on year
+                    let sortedMovies;
+                    if (selectedYear <= currentYear) {
+                        // Previous years: sort by rating (highest first)
+                        sortedMovies = additionalMovies.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+                    } else {
+                        // Future years: sort by release date (newest first)
+                        sortedMovies = additionalMovies.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
+                    }
+                    
+                    // For current year: sort by release date (newest first)
+                    if (selectedYear === currentYear) {
+                        sortedMovies = additionalMovies.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
+                    }
                     
                     sortedMovies.forEach(movie => {
                         createCard(movie, 'trending', true);
@@ -1766,7 +1777,7 @@
             }
         }
 
-        // Initialize the page with data - MODIFIED TO SORT BY RANKING
+        // Initialize the page with data - MODIFIED WITH NEW SORTING LOGIC
         async function initializePage() {
             try {
                 initYearFilter();
@@ -1781,8 +1792,20 @@
                 });
                 
                 if (trendingData.length > 0) {
-                    // Sort trending movies by rating
-                    const sortedMovies = trendingData.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+                    // Apply different sorting based on year
+                    let sortedMovies;
+                    if (selectedYear <= currentYear) {
+                        // Previous years: sort by rating (highest first)
+                        sortedMovies = trendingData.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+                    } else {
+                        // Future years: sort by release date (newest first)
+                        sortedMovies = trendingData.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
+                    }
+                    
+                    // For current year: sort by release date (newest first)
+                    if (selectedYear === currentYear) {
+                        sortedMovies = trendingData.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
+                    }
                     
                     sortedMovies.forEach(movie => {
                         createCard(movie, 'trending', true);
