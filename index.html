@@ -51,7 +51,7 @@
             color: var(--text-color);
             line-height: 1.6;
             padding: 16px;
-            padding-bottom: 80px; /* Space for the bottom button */
+            padding-bottom: 120px; /* Increased space for the bottom button */
             transition: background-color 0.3s, color 0.3s;
         }
 
@@ -414,7 +414,7 @@
             transform: none;
         }
 
-        /* Modal Styles - Reduced size with blur background */
+        /* Modal Styles - Increased height by 1cm */
         .modal {
             display: none;
             position: fixed;
@@ -440,7 +440,7 @@
             border-radius: 16px;
             max-width: 600px;
             width: 90%;
-            max-height: 60vh; /* Half the screen height */
+            max-height: 70vh; /* Increased from 60vh to 70vh (approximately 1cm more) */
             position: absolute;
             top: 50%;
             left: 50%;
@@ -657,6 +657,47 @@
             opacity: 0.7;
         }
 
+        /* Telegram Join Channel Button */
+        .telegram-channel-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #0088cc; /* Telegram blue */
+            color: white;
+            border-radius: 25px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0, 136, 204, 0.4);
+            transition: all 0.3s ease;
+            z-index: 999;
+            overflow: hidden;
+            max-width: 200px;
+        }
+
+        .telegram-channel-btn.compact {
+            width: 50px;
+            padding: 12px;
+            justify-content: center;
+        }
+
+        .telegram-channel-btn.compact .btn-text {
+            display: none;
+        }
+
+        .telegram-channel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 136, 204, 0.5);
+        }
+
+        .telegram-channel-btn i {
+            font-size: 18px;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .modal-body {
@@ -675,6 +716,11 @@
             
             .header-logo {
                 width: 160px;
+            }
+
+            .telegram-channel-btn {
+                bottom: 70px; /* Move above Telegram main button */
+                right: 15px;
             }
         }
 
@@ -848,6 +894,12 @@
         </div>
     </div>
 
+    <!-- Telegram Join Channel Button -->
+    <a href="https://t.me/HosmanReviews" target="_blank" class="telegram-channel-btn" id="telegram-channel-btn">
+        <i class="fab fa-telegram-plane"></i>
+        <span class="btn-text">Join Channel</span>
+    </a>
+
     <div id="movie-modal" class="modal">
         <div class="modal-content">
             <button class="close-modal">
@@ -950,6 +1002,8 @@
         let selectedYear = currentYear;
         let isLoadingTrending = false;
         let isLoadingAI = false;
+        let scrollTimeout = null;
+        let isScrolling = false;
 
         // Initialize Telegram Web App
         function initTelegramApp() {
@@ -990,9 +1044,15 @@
                 });
         }
 
-        // Randomize movies function
+        // Randomize movies function - MODIFIED TO SCROLL TO TOP
         async function randomizeMovies() {
             showLoading('ai-recommendations');
+            
+            // Scroll to top when randomize is clicked
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
             
             try {
                 clearContainer('ai-recommendations');
@@ -1118,7 +1178,7 @@
             });
         }
 
-        // Load trending movies by selected year
+        // Load trending movies by selected year - MODIFIED TO SORT BY RANKING
         async function loadTrendingMoviesByYear() {
             showLoading('trending');
             trendingPage = 1;
@@ -1137,7 +1197,10 @@
                         </div>
                     `;
                 } else {
-                    movies.forEach(movie => {
+                    // Sort movies by rating (highest first)
+                    const sortedMovies = movies.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+                    
+                    sortedMovies.forEach(movie => {
                         createCard(movie, 'trending', true);
                     });
                     document.getElementById('load-more-trending').style.display = 'flex';
@@ -1154,11 +1217,10 @@
             }
         }
 
-        // Fetch movies by year (BUG FIX: Force year filtering for all years, including current)
+        // Fetch movies by year - MODIFIED TO SORT BY VOTE AVERAGE
         async function fetchMoviesByYear(year, page = 1) {
-            // Used to check if year == currentYear and return trending, but that's wrong.
-            // We want to filter by specific release year even for the current year.
-            const data = await fetchFromTMDB(`/discover/movie?primary_release_year=${year}&sort_by=popularity.desc&page=${page}`);
+            // Sort by vote average in descending order to show highest rated first
+            const data = await fetchFromTMDB(`/discover/movie?primary_release_year=${year}&sort_by=vote_average.desc&vote_count.gte=50&page=${page}`);
             if (data && data.results) {
                 return data.results;
             }
@@ -1432,6 +1494,7 @@
             `;
         }
 
+        // MODIFIED TO RESET SCROLL POSITION
         async function openModal(movieId, clickedElement = null) {
             try {
                 provideHapticFeedback('light');
@@ -1465,6 +1528,12 @@
                 const modal = document.getElementById('movie-modal');
                 modal.style.display = 'block';
                 setTimeout(() => modal.classList.add('show'), 10);
+                
+                // Reset modal scroll position to top
+                const modalBody = document.querySelector('.modal-body');
+                if (modalBody) {
+                    modalBody.scrollTop = 0;
+                }
                 
             } catch (error) {
                 console.error('Error opening modal:', error);
@@ -1645,7 +1714,10 @@
                 const additionalMovies = await fetchMoviesByYear(selectedYear, trendingPage);
                 
                 if (additionalMovies.length > 0) {
-                    additionalMovies.forEach(movie => {
+                    // Sort additional movies by rating
+                    const sortedMovies = additionalMovies.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+                    
+                    sortedMovies.forEach(movie => {
                         createCard(movie, 'trending', true);
                     });
                     provideHapticFeedback('light');
@@ -1694,7 +1766,7 @@
             }
         }
 
-        // Initialize the page with data
+        // Initialize the page with data - MODIFIED TO SORT BY RANKING
         async function initializePage() {
             try {
                 initYearFilter();
@@ -1709,7 +1781,10 @@
                 });
                 
                 if (trendingData.length > 0) {
-                    trendingData.forEach(movie => {
+                    // Sort trending movies by rating
+                    const sortedMovies = trendingData.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+                    
+                    sortedMovies.forEach(movie => {
                         createCard(movie, 'trending', true);
                     });
                 }
@@ -1747,10 +1822,42 @@
             });
         }
 
+        // Telegram Join Channel Button Scroll Behavior
+        function setupTelegramButtonScroll() {
+            const telegramBtn = document.getElementById('telegram-channel-btn');
+            let isCompact = false;
+            
+            function handleScroll() {
+                isScrolling = true;
+                
+                // Compact the button when scrolling
+                if (!isCompact) {
+                    telegramBtn.classList.add('compact');
+                    isCompact = true;
+                }
+                
+                // Clear previous timeout
+                if (scrollTimeout) {
+                    clearTimeout(scrollTimeout);
+                }
+                
+                // Set timeout to expand button when scrolling stops
+                scrollTimeout = setTimeout(() => {
+                    isScrolling = false;
+                    telegramBtn.classList.remove('compact');
+                    isCompact = false;
+                }, 1000); // 1 second delay after scrolling stops
+            }
+            
+            // Add scroll event listener
+            window.addEventListener('scroll', handleScroll, { passive: true });
+        }
+
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
             initTelegramApp();
             initializePage();
+            setupTelegramButtonScroll(); // Initialize the Telegram button scroll behavior
             
             document.getElementById('generate-recommendations').addEventListener('click', function() {
                 const prompt = document.getElementById('ai-prompt-input').value.trim();
