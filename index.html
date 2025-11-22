@@ -871,7 +871,6 @@
         </div>
     </div>
 
-    <!-- Telegram Join Channel Button -->
     <a href="https://t.me/HosmanReviews" target="_blank" class="telegram-channel-btn" id="telegram-channel-btn">
         <i class="fab fa-telegram-plane"></i>
         <span class="btn-text">Join Channel</span>
@@ -1210,16 +1209,13 @@
         async function fetchMoviesByYear(year, page = 1) {
             let endpoint;
             
-            if (year <= currentYear) {
-                // Previous years: sort by vote average with high vote count
-                endpoint = `/discover/movie?primary_release_year=${year}&sort_by=vote_average.desc&vote_count.gte=100000&page=${page}`;
+            if (year < currentYear) {
+                // Previous years: sort by vote average with high vote count (REDUCED FROM 100000 TO 1000)
+                endpoint = `/discover/movie?primary_release_year=${year}&sort_by=vote_average.desc&vote_count.gte=1000&page=${page}`;
             } else {
-                // Future years: sort by primary release date
-                endpoint = `/discover/movie?primary_release_year=${year}&sort_by=primary_release_date.desc&page=${page}`;
-            }
-            
-            // For current year: sort by primary release date
-            if (year === currentYear) {
+                // Future years or current year: sort by primary release date/popularity
+                // Note: for current year, we might want popularity or date. 
+                // The previous logic forced date sorting for current year.
                 endpoint = `/discover/movie?primary_release_year=${year}&sort_by=primary_release_date.desc&page=${page}`;
             }
             
