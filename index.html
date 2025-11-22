@@ -51,7 +51,7 @@
             color: var(--text-color);
             line-height: 1.6;
             padding: 16px;
-            padding-bottom: 120px; /* Increased space for the bottom button */
+            padding-bottom: 120px;
             transition: background-color 0.3s, color 0.3s;
         }
 
@@ -110,7 +110,6 @@
             color: var(--link-color);
         }
 
-        /* Info button */
         .info-button {
             background: none;
             border: none;
@@ -136,7 +135,6 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
-        /* Cards Grid - Always 2 columns with reduced height */
         .cards-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -151,7 +149,7 @@
             border: 1px solid var(--border-color);
             transition: all 0.3s ease;
             box-shadow: var(--card-shadow);
-            height: 160px; /* Reduced height to 1/3 of typical mobile screen */
+            height: 160px;
             display: flex;
             cursor: pointer;
         }
@@ -230,7 +228,6 @@
             overflow: hidden;
         }
 
-        /* AI Recommendations Section */
         .ai-input-section {
             background: var(--section-bg);
             border-radius: 16px;
@@ -244,7 +241,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Beautified Search Bar */
         .ai-input {
             flex: 1;
             padding: 0.8rem 1rem;
@@ -347,7 +343,6 @@
             line-height: 1.5;
         }
 
-        /* Year Filter Section */
         .year-filter {
             display: flex;
             justify-content: center;
@@ -379,7 +374,6 @@
             color: var(--button-text-color);
         }
 
-        /* Load More Button */
         .load-more {
             display: flex;
             justify-content: center;
@@ -418,7 +412,6 @@
             transform: none;
         }
 
-        /* Modal Styles - Increased height by 1cm */
         .modal {
             display: none;
             position: fixed;
@@ -444,7 +437,7 @@
             border-radius: 16px;
             max-width: 600px;
             width: 90%;
-            max-height: 70vh; /* Increased from 60vh to 70vh (approximately 1cm more) */
+            max-height: 70vh;
             position: absolute;
             top: 50%;
             left: 50%;
@@ -501,7 +494,7 @@
             flex: 1;
             overflow-y: auto;
             display: grid;
-            grid-template-columns: 120px 1fr; /* Reduced image size */
+            grid-template-columns: 120px 1fr;
             gap: 1.2rem;
         }
 
@@ -558,7 +551,6 @@
             border-top: 1px solid var(--border-color);
         }
 
-        /* Info Modal */
         .info-modal .modal-content {
             max-height: 70vh;
         }
@@ -587,7 +579,6 @@
             margin-top: 1rem;
         }
 
-        /* Skeleton Loading */
         .skeleton {
             background: linear-gradient(90deg, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.05) 75%);
             background-size: 200% 100%;
@@ -612,7 +603,6 @@
             }
         }
 
-        /* Spinner */
         .spinner {
             border: 2px solid rgba(0, 0, 0, 0.2);
             border-radius: 50%;
@@ -627,7 +617,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Share Tooltip */
         .share-tooltip {
             position: fixed;
             background: var(--button-color);
@@ -647,7 +636,6 @@
             transform: translateY(0);
         }
 
-        /* Empty States */
         .empty-state, .error-state {
             text-align: center;
             padding: 2rem 1.5rem;
@@ -661,12 +649,11 @@
             opacity: 0.7;
         }
 
-        /* Telegram Join Channel Button */
         .telegram-channel-btn {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: #0088cc; /* Telegram blue */
+            background: #0088cc;
             color: white;
             border-radius: 25px;
             padding: 12px 20px;
@@ -702,7 +689,6 @@
             font-size: 18px;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .modal-body {
                 grid-template-columns: 1fr;
@@ -724,7 +710,7 @@
             }
 
             .telegram-channel-btn {
-                bottom: 70px; /* Move above Telegram main button */
+                bottom: 70px;
                 right: 15px;
             }
         }
@@ -959,7 +945,6 @@
         const Telegram = window.Telegram?.WebApp;
 
         // API Configuration
-        // NOTE: In a production app, these keys should be stored on a backend server, not in client-side code.
         const TMDB_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZTYzNzRiZTQ2ZTYxNGY2MzZkNjgxOWRiYmU1NGYyYiIsIm5iZiI6MTc2MzE4NjgxNC40MTEsInN1YiI6IjY5MTgxODdlOTUxNDNkZmE0NmEwZTU1OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.SWHyK0g4TvYfDL825KRKKhGcV3nkzfAYVZdigor2QAk';
         const GEMINI_API_KEY = 'AIzaSyCTRuQZDxXGf-u2MY9HErtJWhQGgQ4_nhY';
         
@@ -1021,7 +1006,7 @@
                 });
         }
 
-        // Randomize movies function - MODIFIED TO SCROLL TO TOP
+        // Randomize movies function
         async function randomizeMovies() {
             showLoading('ai-recommendations');
             
@@ -1155,7 +1140,7 @@
             });
         }
 
-        // Load trending movies by selected year - MODIFIED WITH NEW SORTING LOGIC
+        // Load trending movies by selected year - RESTORED DEFAULT BEHAVIOR
         async function loadTrendingMoviesByYear() {
             showLoading('trending');
             trendingPage = 1;
@@ -1174,22 +1159,8 @@
                         </div>
                     `;
                 } else {
-                    // Apply different sorting based on year
-                    let sortedMovies;
-                    if (selectedYear <= currentYear) {
-                        // Previous years: sort by rating (highest first)
-                        sortedMovies = movies.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
-                    } else {
-                        // Future years: sort by release date (newest first)
-                        sortedMovies = movies.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
-                    }
-                    
-                    // For current year: sort by release date (newest first)
-                    if (selectedYear === currentYear) {
-                        sortedMovies = movies.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
-                    }
-                    
-                    sortedMovies.forEach(movie => {
+                    // RESTORED: Use default order from API (popularity-based)
+                    movies.forEach(movie => {
                         createCard(movie, 'trending', true);
                     });
                     document.getElementById('load-more-trending').style.display = 'flex';
@@ -1206,24 +1177,10 @@
             }
         }
 
-        // Fetch movies by year - MODIFIED WITH VOTE COUNT AND SORTING LOGIC
+        // Fetch movies by year - RESTORED DEFAULT BEHAVIOR
         async function fetchMoviesByYear(year, page = 1) {
-            let endpoint;
-            
-            if (year <= currentYear) {
-                // Previous years: sort by vote average with high vote count
-                endpoint = `/discover/movie?primary_release_year=${year}&sort_by=vote_average.desc&vote_count.gte=100000&page=${page}`;
-            } else {
-                // Future years: sort by primary release date
-                endpoint = `/discover/movie?primary_release_year=${year}&sort_by=primary_release_date.desc&page=${page}`;
-            }
-            
-            // For current year: sort by primary release date
-            if (year === currentYear) {
-                endpoint = `/discover/movie?primary_release_year=${year}&sort_by=primary_release_date.desc&page=${page}`;
-            }
-            
-            const data = await fetchFromTMDB(endpoint);
+            // RESTORED: Use default TMDB sorting (popularity-based)
+            const data = await fetchFromTMDB(`/discover/movie?primary_release_year=${year}&sort_by=popularity.desc&page=${page}`);
             if (data && data.results) {
                 return data.results;
             }
@@ -1284,14 +1241,13 @@
             return result;
         }
 
-        // Generate movie summary using Gemini AI (UPDATED MODEL AND ENDPOINT)
+        // Generate movie summary using Gemini AI
         async function generateMovieSummary(movieTitle, movieOverview) {
             try {
                 document.getElementById('modal-ai-summary').innerHTML = '<p><div class="spinner"></div> Generating AI summary...</p>';
                 
                 const prompt = `Provide a concise summary of the key events in the movie "${movieTitle}". Focus on the main plot points and character developments. Here's the official overview: ${movieOverview}`;
                 
-                // Switched to v1beta/models/gemini-1.5-flash for better performance/current support
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1702,7 +1658,7 @@
             }
         }
 
-        // Load more trending movies (BUG FIX: Added isLoading state check)
+        // Load more trending movies - RESTORED DEFAULT BEHAVIOR
         async function loadMoreTrending() {
             if (isLoadingTrending) return;
             isLoadingTrending = true;
@@ -1717,22 +1673,8 @@
                 const additionalMovies = await fetchMoviesByYear(selectedYear, trendingPage);
                 
                 if (additionalMovies.length > 0) {
-                    // Apply different sorting based on year
-                    let sortedMovies;
-                    if (selectedYear <= currentYear) {
-                        // Previous years: sort by rating (highest first)
-                        sortedMovies = additionalMovies.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
-                    } else {
-                        // Future years: sort by release date (newest first)
-                        sortedMovies = additionalMovies.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
-                    }
-                    
-                    // For current year: sort by release date (newest first)
-                    if (selectedYear === currentYear) {
-                        sortedMovies = additionalMovies.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
-                    }
-                    
-                    sortedMovies.forEach(movie => {
+                    // RESTORED: Use default order from API
+                    additionalMovies.forEach(movie => {
                         createCard(movie, 'trending', true);
                     });
                     provideHapticFeedback('light');
@@ -1754,7 +1696,7 @@
             }
         }
 
-        // Load more AI recommendations (BUG FIX: Added isLoading state check)
+        // Load more AI recommendations
         async function loadMoreAI() {
             if (isLoadingAI) return;
             isLoadingAI = true;
@@ -1781,7 +1723,7 @@
             }
         }
 
-        // Initialize the page with data - MODIFIED WITH NEW SORTING LOGIC
+        // Initialize the page with data - RESTORED DEFAULT BEHAVIOR
         async function initializePage() {
             try {
                 initYearFilter();
@@ -1796,22 +1738,8 @@
                 });
                 
                 if (trendingData.length > 0) {
-                    // Apply different sorting based on year
-                    let sortedMovies;
-                    if (selectedYear <= currentYear) {
-                        // Previous years: sort by rating (highest first)
-                        sortedMovies = trendingData.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
-                    } else {
-                        // Future years: sort by release date (newest first)
-                        sortedMovies = trendingData.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
-                    }
-                    
-                    // For current year: sort by release date (newest first)
-                    if (selectedYear === currentYear) {
-                        sortedMovies = trendingData.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
-                    }
-                    
-                    sortedMovies.forEach(movie => {
+                    // RESTORED: Use default order from API
+                    trendingData.forEach(movie => {
                         createCard(movie, 'trending', true);
                     });
                 }
@@ -1884,7 +1812,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             initTelegramApp();
             initializePage();
-            setupTelegramButtonScroll(); // Initialize the Telegram button scroll behavior
+            setupTelegramButtonScroll();
             
             document.getElementById('generate-recommendations').addEventListener('click', function() {
                 const prompt = document.getElementById('ai-prompt-input').value.trim();
