@@ -95,33 +95,55 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
-        /* Telegram Channel Button moved to top */
+        /* Telegram Channel Button - Fixed position above navigation */
         .telegram-channel-btn {
-            position: absolute;
-            top: 0;
-            right: 0;
+            position: fixed;
+            bottom: 150px; /* Half cm above navigation (adjust based on your needs) */
+            right: 20px;
             background: var(--telegram-blue);
             color: white;
             border-radius: 25px;
-            padding: 8px 16px;
+            padding: 12px 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;
-            box-shadow: 0 2px 8px rgba(0, 136, 204, 0.3);
-            transition: all 0.3s ease;
-            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 136, 204, 0.4);
+            transition: all 0.5s ease;
+            z-index: 1000;
+            overflow: hidden;
+            max-width: 200px;
+            white-space: nowrap;
+        }
+
+        .telegram-channel-btn.retracted {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            padding: 0;
+            justify-content: center;
+            transition: all 0.5s ease 0.5s; /* Delay before retracting */
+        }
+
+        .telegram-channel-btn.retracted .btn-text {
+            display: none;
+        }
+
+        .telegram-channel-btn.retracted i {
+            font-size: 24px;
+            margin: 0;
         }
 
         .telegram-channel-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 136, 204, 0.4);
+            box-shadow: 0 6px 16px rgba(0, 136, 204, 0.5);
         }
 
         .telegram-channel-btn i {
-            font-size: 16px;
+            font-size: 18px;
+            transition: font-size 0.3s ease;
         }
 
         .section {
@@ -242,7 +264,7 @@
         /* Switch Component */
         .view-switch {
             position: fixed;
-            bottom: 100px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--switch-bg);
@@ -404,7 +426,7 @@
             height: 100%;
             background: var(--modal-overlay);
             backdrop-filter: blur(8px);
-            z-index: 1000;
+            z-index: 2000;
             overflow-y: auto;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -451,7 +473,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1001;
+            z-index: 2001;
         }
 
         .modal-close:hover {
@@ -738,7 +760,7 @@
 
         @media (max-width: 768px) {
             .view-switch {
-                bottom: 90px;
+                bottom: 70px;
             }
             
             .app-name-pill {
@@ -761,17 +783,19 @@
             }
             
             .telegram-channel-btn {
-                position: relative;
-                top: auto;
-                right: auto;
-                margin: 0 auto 1rem;
-                display: inline-flex;
+                bottom: 130px;
+                right: 15px;
+            }
+            
+            .telegram-channel-btn.retracted {
+                width: 50px;
+                height: 50px;
             }
         }
 
         @media (max-width: 480px) {
             .view-switch {
-                bottom: 80px;
+                bottom: 60px;
                 padding: 4px;
             }
             
@@ -802,6 +826,18 @@
                 justify-content: center;
             }
             
+            .telegram-channel-btn {
+                bottom: 120px;
+                right: 10px;
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+            
+            .telegram-channel-btn.retracted {
+                width: 46px;
+                height: 46px;
+            }
+            
             .scroll-indicator {
                 bottom: 140px;
                 font-size: 0.7rem;
@@ -814,11 +850,6 @@
     <div class="container">
         <div class="header">
             <div class="app-name-pill">hosman movies</div>
-            <!-- Telegram Channel Button moved to top -->
-            <a href="https://t.me/HosmanReviews" target="_blank" class="telegram-channel-btn">
-                <i class="fab fa-telegram-plane"></i>
-                <span>Join Channel</span>
-            </a>
         </div>
 
         <!-- Trending Movies Section -->
@@ -1003,6 +1034,12 @@
         </button>
     </div>
 
+    <!-- Telegram Channel Button -->
+    <a href="https://t.me/HosmanReviews" target="_blank" class="telegram-channel-btn" id="telegram-channel-btn">
+        <i class="fab fa-telegram-plane"></i>
+        <span class="btn-text">Join Channel</span>
+    </a>
+
     <!-- Movie Modal -->
     <div id="movie-modal" class="movie-modal">
         <div class="movie-modal-content">
@@ -1071,9 +1108,11 @@
         let hasMoreYear = true;
         let hasMoreTV = true;
         let scrollTimeout = null;
+        let telegramButtonTimeout = null;
         let isScrolling = false;
         let lastScrollPosition = 0;
         let currentMovieModalData = null;
+        let isTelegramButtonRetracted = false;
 
         // Initialize Telegram Web App
         const Telegram = window.Telegram?.WebApp;
@@ -1145,32 +1184,57 @@
             return [];
         }
 
+        // FIXED: Proper genre-based content fetching
         async function fetchTVContent(page = 1, genre = null, search = '') {
             let endpoint;
             
             if (search) {
-                endpoint = `/search/multi?query=${encodeURIComponent(search)}&page=${page}`;
+                // Search across movies and TV shows
+                endpoint = `/search/multi?query=${encodeURIComponent(search)}&page=${page}&include_adult=false`;
+                const data = await fetchFromTMDB(endpoint);
+                if (data && data.results) {
+                    return data.results.filter(item => 
+                        (item.media_type === 'movie' || item.media_type === 'tv') && 
+                        item.poster_path && 
+                        (item.title || item.name)
+                    );
+                }
+                return [];
             } else if (genre && genre !== 'all') {
-                endpoint = `/discover/movie?with_genres=${genre}&page=${page}`;
+                // FIXED: Use discover endpoint for specific genre
+                endpoint = `/discover/movie?with_genres=${genre}&page=${page}&sort_by=popularity.desc`;
+                const data = await fetchFromTMDB(endpoint);
+                if (data && data.results) {
+                    return data.results.map(item => ({ ...item, media_type: 'movie' }));
+                }
+                return [];
             } else {
-                endpoint = `/trending/all/week?page=${page}`;
+                // Get trending content (mixed movies and TV)
+                const [movieData, tvData] = await Promise.all([
+                    fetchFromTMDB(`/trending/movie/week?page=${page}`),
+                    fetchFromTMDB(`/trending/tv/week?page=${page}`)
+                ]);
+                
+                let results = [];
+                if (movieData && movieData.results) {
+                    results = results.concat(movieData.results.map(item => ({ ...item, media_type: 'movie' })));
+                }
+                if (tvData && tvData.results) {
+                    results = results.concat(tvData.results.map(item => ({ ...item, media_type: 'tv' })));
+                }
+                
+                // Sort by popularity
+                results.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+                return results.slice(0, 20); // Limit results
             }
-            
-            const data = await fetchFromTMDB(endpoint);
-            if (data && data.results) {
-                return data.results.filter(item => 
-                    item.media_type === 'movie' || item.media_type === 'tv'
-                );
-            }
-            return [];
         }
 
         async function fetchMovieDetails(movieId) {
-            return await fetchFromTMDB(`/movie/${movieId}`);
+            return await fetchFromTMDB(`/movie/${movieId}?append_to_response=credits,videos`);
         }
 
         async function fetchTVDetails(tvId) {
-            return await fetchFromTMDB(`/tv/${tvId}`);
+            return await fetchFromTMDB(`/tv/${tvId}?append_to_response=credits,videos`);
         }
 
         // Create card for movie/TV show
@@ -1424,7 +1488,7 @@
             }
         }
 
-        // Load TV content
+        // FIXED: Load TV content with proper genre filtering
         async function loadTVContent(loadMore = false) {
             if (isTVLoading) return;
             
@@ -1458,7 +1522,7 @@
                     hasMoreTV = false;
                 } else {
                     content.forEach(item => {
-                        const type = item.media_type === 'tv' ? 'tv' : 'movie';
+                        const type = item.media_type || 'movie';
                         createCard(item, 'tv-content', type);
                         tvContent.push(item);
                     });
@@ -1576,7 +1640,7 @@
                 bottom: 0;
                 background: var(--modal-overlay);
                 backdrop-filter: blur(8px);
-                z-index: 1000;
+                z-index: 2000;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -1706,6 +1770,32 @@
                 
             } catch (error) {
                 console.error('Error opening modal:', error);
+                // Show basic info if detailed fetch fails
+                currentMovieModalData = item;
+                const title = item.title || item.name;
+                const year = item.release_date ? item.release_date.substring(0, 4) : 
+                            item.first_air_date ? item.first_air_date.substring(0, 4) : 'TBA';
+                const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
+                const imagePath = item.poster_path ? `${TMDB_IMAGE_BASE_URL}${item.poster_path}` : PLACEHOLDER_IMAGE;
+                
+                document.getElementById('modal-title').textContent = title;
+                document.getElementById('modal-year').textContent = year;
+                document.getElementById('modal-rating').innerHTML = `<i class="fas fa-star"></i> ${rating}/10`;
+                document.getElementById('modal-runtime').textContent = 'N/A';
+                document.getElementById('modal-type').textContent = type === 'tv' ? 'TV Series' : 'Movie';
+                document.getElementById('modal-overview').textContent = item.overview || 'No overview available.';
+                document.getElementById('modal-genres-list').textContent = 'Unknown';
+                document.getElementById('modal-release-date').textContent = item.release_date || item.first_air_date || 'TBA';
+                document.getElementById('modal-poster').src = imagePath;
+                
+                document.getElementById('modal-actions').innerHTML = `
+                    <button class="modal-action-btn" onclick="shareMovie()">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                `;
+                
+                const modal = document.getElementById('movie-modal');
+                modal.classList.add('show');
             }
         }
 
@@ -1755,6 +1845,74 @@
             
             // Open in new tab
             window.open(addEventUrl, '_blank');
+        }
+
+        // FIXED: Telegram button scroll behavior with 30-second delay
+        function setupTelegramButtonScroll() {
+            const telegramBtn = document.getElementById('telegram-channel-btn');
+            let retractTimer = null;
+            let expandTimer = null;
+            
+            function retractButton() {
+                if (!isTelegramButtonRetracted) {
+                    telegramBtn.classList.add('retracted');
+                    isTelegramButtonRetracted = true;
+                    
+                    // Clear any existing expand timer
+                    if (expandTimer) {
+                        clearTimeout(expandTimer);
+                    }
+                    
+                    // Set timer to expand after 30 seconds
+                    expandTimer = setTimeout(() => {
+                        telegramBtn.classList.remove('retracted');
+                        isTelegramButtonRetracted = false;
+                    }, 30000); // 30 seconds
+                }
+            }
+            
+            function handleScroll() {
+                // Clear existing retract timer
+                if (retractTimer) {
+                    clearTimeout(retractTimer);
+                }
+                
+                // Set new retract timer
+                retractTimer = setTimeout(retractButton, 1000); // Retract after 1 second of scrolling
+            }
+            
+            // Add scroll event listener
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            
+            // Add hover behavior to temporarily show full button
+            telegramBtn.addEventListener('mouseenter', () => {
+                telegramBtn.classList.remove('retracted');
+                isTelegramButtonRetracted = false;
+                
+                // Clear expand timer on hover
+                if (expandTimer) {
+                    clearTimeout(expandTimer);
+                }
+            });
+            
+            telegramBtn.addEventListener('mouseleave', () => {
+                // Only retract on mouse leave if user is still scrolling or after delay
+                if (retractTimer) {
+                    clearTimeout(retractTimer);
+                }
+                retractTimer = setTimeout(retractButton, 2000); // Wait 2 seconds after hover before retracting
+            });
+            
+            // Also retract on touch devices
+            telegramBtn.addEventListener('touchstart', () => {
+                telegramBtn.classList.remove('retracted');
+                isTelegramButtonRetracted = false;
+                
+                // Clear expand timer on touch
+                if (expandTimer) {
+                    clearTimeout(expandTimer);
+                }
+            });
         }
 
         // Infinite scroll functionality
@@ -1846,7 +2004,7 @@
                 });
             });
             
-            // Set up TV category buttons
+            // FIXED: Set up TV category buttons with proper genre filtering
             document.querySelectorAll('.tv-category-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     document.querySelectorAll('.tv-category-btn').forEach(btn => {
@@ -1854,6 +2012,7 @@
                     });
                     this.classList.add('active');
                     currentTVGenre = this.dataset.genre;
+                    tvPage = 1; // Reset page when changing genre
                     loadTVContent();
                 });
             });
@@ -1865,6 +2024,7 @@
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => {
                     currentTVSearch = this.value;
+                    tvPage = 1; // Reset page when searching
                     loadTVContent();
                 }, 500);
             });
@@ -1881,6 +2041,9 @@
             
             // Setup infinite scroll
             setupInfiniteScroll();
+            
+            // Setup Telegram button scroll behavior
+            setupTelegramButtonScroll();
             
             // Hide loaders initially
             showLoader('trending-loader', false);
