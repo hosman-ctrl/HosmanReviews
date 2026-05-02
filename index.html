@@ -1,11 +1,4 @@
-I’ll integrate the ad display at the bottom and add aggressive pre‑loading so new movie rows appear almost instantly. Below is the updated HTML with these improvements.
 
-Key changes:
-
-· Ad at the bottom: when the user reaches the bottom of the loaded content (threshold 200 px), an interstitial ad is shown. If the user then scrolls back up, the ad is dismissed (using ads.ad_hide() if available) – this matches your “turn off when scrolling” request.
-· Seamless pre‑fetching: after the first page loads, the next page is automatically pre‑fetched in the background. Additionally, the scroll trigger for loading more is moved to 300 px from the bottom, so new content arrives before you actually reach the end.
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
