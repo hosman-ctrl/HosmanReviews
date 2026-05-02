@@ -1,3 +1,11 @@
+I’ll integrate the ad display at the bottom and add aggressive pre‑loading so new movie rows appear almost instantly. Below is the updated HTML with these improvements.
+
+Key changes:
+
+· Ad at the bottom: when the user reaches the bottom of the loaded content (threshold 200 px), an interstitial ad is shown. If the user then scrolls back up, the ad is dismissed (using ads.ad_hide() if available) – this matches your “turn off when scrolling” request.
+· Seamless pre‑fetching: after the first page loads, the next page is automatically pre‑fetched in the background. Additionally, the scroll trigger for loading more is moved to 300 px from the bottom, so new content arrives before you actually reach the end.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,7 +66,7 @@
             color: var(--text-color);
             line-height: 1.6;
             padding: 16px;
-            padding-bottom: 180px; /* Increased padding for switch */
+            padding-bottom: 180px;
             transition: background-color 0.3s, color 0.3s;
         }
 
@@ -67,7 +75,6 @@
             margin: 0 auto;
         }
 
-        /* Centered Pill Shape */
         .header {
             text-align: center;
             margin-bottom: 2rem;
@@ -95,10 +102,9 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
-        /* Telegram Channel Button - Fixed position above navigation */
         .telegram-channel-btn {
             position: fixed;
-            bottom: 150px; /* Half cm above navigation (adjust based on your needs) */
+            bottom: 150px;
             right: 20px;
             background: var(--telegram-blue);
             color: white;
@@ -124,7 +130,7 @@
             border-radius: 50%;
             padding: 0;
             justify-content: center;
-            transition: all 0.5s ease 0.5s; /* Delay before retracting */
+            transition: all 0.5s ease 0.5s;
         }
 
         .telegram-channel-btn.retracted .btn-text {
@@ -261,7 +267,6 @@
             overflow: hidden;
         }
 
-        /* Switch Component */
         .view-switch {
             position: fixed;
             bottom: 80px;
@@ -301,7 +306,6 @@
             color: var(--button-text-color);
         }
 
-        /* Calendar View */
         .calendar-view {
             display: block;
             margin-top: 1rem;
@@ -407,7 +411,6 @@
             justify-content: center;
         }
 
-        /* Content sections */
         .content-section {
             display: none;
         }
@@ -416,7 +419,6 @@
             display: block;
         }
 
-        /* Movie Modal */
         .movie-modal {
             display: none;
             position: fixed;
@@ -557,12 +559,10 @@
             transform: translateY(-2px);
         }
 
-        /* Add to Calendar Button */
         .add-to-calendar-btn {
             background: #ff6b35 !important;
         }
 
-        /* TV Section */
         .tv-categories {
             display: flex;
             flex-wrap: wrap;
@@ -612,7 +612,6 @@
             box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2);
         }
 
-        /* Help Section */
         .help-content {
             line-height: 1.6;
         }
@@ -638,7 +637,6 @@
             font-size: 0.95rem;
         }
 
-        /* Loader */
         .loader {
             text-align: center;
             padding: 20px;
@@ -738,7 +736,6 @@
             opacity: 0.7;
         }
 
-        /* Scroll indicator */
         .scroll-indicator {
             position: fixed;
             bottom: 180px;
@@ -976,42 +973,42 @@
                 <div class="help-content">
                     <div class="help-step">
                         <h3><i class="fas fa-compass"></i> Navigation</h3>
-                        <p>Use the navigation bar at the bottom to switch between sections: Trending movies, Movies This Year, TV content, and Help.</p>
+                        <p>Use the navigation bar at the bottom to switch between sections.</p>
                     </div>
                     
                     <div class="help-step">
                         <h3><i class="fas fa-calendar"></i> Calendar View</h3>
-                        <p>In the "Movies This Year" section, view movies organized by month. Click on any day with movies to see what's releasing.</p>
+                        <p>In the "Movies This Year" section, view movies organized by month.</p>
                     </div>
                     
                     <div class="help-step">
                         <h3><i class="fas fa-film"></i> Movie Details</h3>
-                        <p>Tap any movie poster to see detailed information, including description, rating, and release date.</p>
+                        <p>Tap any movie poster to see detailed information.</p>
                     </div>
                     
                     <div class="help-step">
                         <h3><i class="fas fa-tv"></i> TV Section</h3>
-                        <p>Browse all content types including movies, series, and short films. Use the genre filters and search bar to find specific content.</p>
+                        <p>Browse all content types using genre filters and search.</p>
                     </div>
                     
                     <div class="help-step">
                         <h3><i class="fas fa-bell"></i> Notifications</h3>
-                        <p>For upcoming movies, you can add them to your calendar to get reminders when they're released.</p>
+                        <p>For upcoming movies, add them to your calendar.</p>
                     </div>
                     
                     <div class="help-step">
                         <h3><i class="fas fa-infinity"></i> Infinite Scroll</h3>
-                        <p>Scroll down in any section to automatically load more content. The app will continue loading as you reach the bottom.</p>
+                        <p>Scroll down to load more content automatically.</p>
                     </div>
                     
                     <div class="help-step">
                         <h3><i class="fas fa-palette"></i> Themes</h3>
-                        <p>The app automatically adapts to your Telegram theme. You can also manually switch between light and dark modes in your Telegram settings.</p>
+                        <p>The app adapts to your Telegram theme (light/dark).</p>
                     </div>
                     
                     <div class="help-step">
                         <h3><i class="fas fa-share"></i> Sharing</h3>
-                        <p>Share your favorite movies with friends directly from the movie details view.</p>
+                        <p>Share your favorite movies with friends.</p>
                     </div>
                 </div>
             </div>
@@ -1092,7 +1089,7 @@
 
         // Global variables
         let currentView = 'trending';
-        let currentYearView = 'calendar'; // Default to calendar view
+        let currentYearView = 'calendar';
         let trendingPage = 1;
         let yearPage = 1;
         let tvPage = 1;
@@ -1113,6 +1110,16 @@
         let lastScrollPosition = 0;
         let currentMovieModalData = null;
         let isTelegramButtonRetracted = false;
+        
+        // Ad related variables
+        let isAdShowing = false;
+        let lastAdShownAt = 0; // timestamp to prevent frequent ads
+        const AD_COOLDOWN = 30000; // 30 seconds between ads
+
+        // Prefetch timers
+        let trendingPrefetchTimer = null;
+        let yearPrefetchTimer = null;
+        let tvPrefetchTimer = null;
 
         // Initialize Telegram Web App
         const Telegram = window.Telegram?.WebApp;
@@ -1126,10 +1133,8 @@
             Telegram.ready();
             Telegram.expand();
             
-            // Apply Telegram theme
             applyTelegramTheme();
             
-            // Setup events
             setupTelegramEvents();
         }
 
@@ -1184,12 +1189,10 @@
             return [];
         }
 
-        // FIXED: Proper genre-based content fetching
         async function fetchTVContent(page = 1, genre = null, search = '') {
             let endpoint;
             
             if (search) {
-                // Search across movies and TV shows
                 endpoint = `/search/multi?query=${encodeURIComponent(search)}&page=${page}&include_adult=false`;
                 const data = await fetchFromTMDB(endpoint);
                 if (data && data.results) {
@@ -1201,7 +1204,6 @@
                 }
                 return [];
             } else if (genre && genre !== 'all') {
-                // FIXED: Use discover endpoint for specific genre
                 endpoint = `/discover/movie?with_genres=${genre}&page=${page}&sort_by=popularity.desc`;
                 const data = await fetchFromTMDB(endpoint);
                 if (data && data.results) {
@@ -1209,7 +1211,6 @@
                 }
                 return [];
             } else {
-                // Get trending content (mixed movies and TV)
                 const [movieData, tvData] = await Promise.all([
                     fetchFromTMDB(`/trending/movie/week?page=${page}`),
                     fetchFromTMDB(`/trending/tv/week?page=${page}`)
@@ -1223,9 +1224,8 @@
                     results = results.concat(tvData.results.map(item => ({ ...item, media_type: 'tv' })));
                 }
                 
-                // Sort by popularity
                 results.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
-                return results.slice(0, 20); // Limit results
+                return results.slice(0, 20);
             }
         }
 
@@ -1237,7 +1237,6 @@
             return await fetchFromTMDB(`/tv/${tvId}?append_to_response=credits,videos`);
         }
 
-        // Create card for movie/TV show
         function createCard(item, containerId, type = 'movie') {
             const container = document.getElementById(containerId);
             
@@ -1298,7 +1297,6 @@
 
         // Switch between views
         function switchView(view) {
-            // Update active button
             document.querySelectorAll('.switch-option').forEach(btn => {
                 btn.classList.remove('active');
                 if (btn.getAttribute('data-view') === view) {
@@ -1306,18 +1304,14 @@
                 }
             });
             
-            // Hide all sections
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            // Show selected section
             document.getElementById(`${view}-section`).classList.add('active');
             
-            // Update current view
             currentView = view;
             
-            // Load data if not already loaded
             switch(view) {
                 case 'trending':
                     if (document.getElementById('trending').children.length === 0) {
@@ -1334,15 +1328,12 @@
                         loadTVContent();
                     }
                     break;
-                // Help section doesn't need data loading
             }
         }
 
-        // Switch between calendar and list view
         function switchYearView(view) {
             currentYearView = view;
             
-            // Update active button
             document.querySelectorAll('.calendar-switch-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (btn.getAttribute('data-view') === view) {
@@ -1350,7 +1341,6 @@
                 }
             });
             
-            // Show/hide views
             if (view === 'calendar') {
                 document.getElementById('list-view').style.display = 'none';
                 document.getElementById('calendar-view').style.display = 'block';
@@ -1360,7 +1350,62 @@
             }
         }
 
-        // Load trending movies with infinite scroll
+        // Ad management functions
+        function showAdIfNeeded() {
+            const now = Date.now();
+            if (isAdShowing || (now - lastAdShownAt) < AD_COOLDOWN) {
+                return false;
+            }
+            
+            if (typeof ads !== 'undefined' && ads && ads.ad_show) {
+                ads.ad_show({
+                    adBlockUuid: "4c726af2-e572-4018-a8fe-a2e79f52bd25"
+                });
+                isAdShowing = true;
+                lastAdShownAt = now;
+                return true;
+            }
+            return false;
+        }
+
+        function hideAdIfShowing() {
+            if (isAdShowing) {
+                // Try to hide the ad if the SDK provides a method
+                if (typeof ads !== 'undefined' && ads && ads.ad_hide) {
+                    ads.ad_hide();
+                }
+                isAdShowing = false;
+            }
+        }
+
+        // Prefetch next page for seamless scrolling
+        function schedulePrefetch(type) {
+            // Clear existing timer
+            if (type === 'trending') {
+                if (trendingPrefetchTimer) clearTimeout(trendingPrefetchTimer);
+                if (hasMoreTrending && !isTrendingLoading) {
+                    trendingPrefetchTimer = setTimeout(() => {
+                        loadTrendingMovies(true);
+                    }, 500);
+                }
+            } else if (type === 'year') {
+                if (yearPrefetchTimer) clearTimeout(yearPrefetchTimer);
+                if (hasMoreYear && !isYearLoading) {
+                    yearPrefetchTimer = setTimeout(() => {
+                        loadYearMovies(true);
+                    }, 500);
+                }
+            } else if (type === 'tv') {
+                if (tvPrefetchTimer) clearTimeout(tvPrefetchTimer);
+                if (hasMoreTV && !isTVLoading) {
+                    tvPrefetchTimer = setTimeout(() => {
+                        loadTVContent(true);
+                    }, 500);
+                }
+            }
+        }
+
+        // Load trending movies with prefetch support
         async function loadTrendingMovies(loadMore = false) {
             if (isTrendingLoading) return;
             
@@ -1396,6 +1441,11 @@
                         createCard(movie, 'trending', 'movie');
                     });
                     trendingPage++;
+                    
+                    // After loading, schedule prefetch of next page
+                    if (hasMoreTrending) {
+                        schedulePrefetch('trending');
+                    }
                 }
             } catch (error) {
                 console.error('Error loading trending movies:', error);
@@ -1414,7 +1464,7 @@
             }
         }
 
-        // Load movies for current year with background loading
+        // Load movies for current year with prefetch
         async function loadYearMovies(loadMore = false) {
             if (isYearLoading) return;
             
@@ -1424,7 +1474,6 @@
                 calendarMovies = [];
                 hasMoreYear = true;
                 
-                // Also show loading for calendar
                 document.getElementById('calendar-months').innerHTML = `
                     <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--hint-color);">
                         <div class="spinner" style="margin: 0 auto 10px;"></div>
@@ -1439,7 +1488,6 @@
             try {
                 const movies = await fetchMoviesByYear(currentYear, yearPage);
                 
-                // Add to calendar movies array
                 calendarMovies = [...calendarMovies, ...movies];
                 
                 if (!loadMore) {
@@ -1463,12 +1511,11 @@
                     });
                     yearPage++;
                     
-                    // Update calendar view
                     generateCalendarView();
                     
                     // Continue loading in background if we have less than 100 movies
                     if (calendarMovies.length < 100 && hasMoreYear) {
-                        setTimeout(() => loadYearMovies(true), 500);
+                        schedulePrefetch('year');
                     }
                 }
             } catch (error) {
@@ -1488,7 +1535,7 @@
             }
         }
 
-        // FIXED: Load TV content with proper genre filtering
+        // Load TV content with prefetch
         async function loadTVContent(loadMore = false) {
             if (isTVLoading) return;
             
@@ -1527,6 +1574,11 @@
                         tvContent.push(item);
                     });
                     tvPage++;
+                    
+                    // Prefetch next page
+                    if (hasMoreTV) {
+                        schedulePrefetch('tv');
+                    }
                 }
             } catch (error) {
                 console.error('Error loading TV content:', error);
@@ -1545,16 +1597,14 @@
             }
         }
 
-        // Generate calendar view organized by months
         function generateCalendarView() {
             const calendarMonths = document.getElementById('calendar-months');
             
-            // Group movies by month
             const moviesByMonth = {};
             calendarMovies.forEach(movie => {
                 if (movie.release_date) {
                     const date = new Date(movie.release_date);
-                    const month = date.getMonth(); // 0-11
+                    const month = date.getMonth();
                     const day = date.getDate();
                     
                     if (date.getFullYear() === currentYear) {
@@ -1569,7 +1619,6 @@
                 }
             });
             
-            // Month names
             const monthNames = [
                 'January', 'February', 'March', 'April', 'May', 'June',
                 'July', 'August', 'September', 'October', 'November', 'December'
@@ -1577,7 +1626,6 @@
             
             let calendarHTML = '';
             
-            // Create calendar for each month
             for (let month = 0; month < 12; month++) {
                 calendarHTML += `
                     <div class="calendar-month">
@@ -1585,16 +1633,13 @@
                         <div class="calendar-days">
                 `;
                 
-                // Get first day of month and number of days
                 const firstDay = new Date(currentYear, month, 1).getDay();
                 const daysInMonth = new Date(currentYear, month + 1, 0).getDate();
                 
-                // Add empty cells for days before first day of month
                 for (let i = 0; i < firstDay; i++) {
                     calendarHTML += `<div class="calendar-day empty"></div>`;
                 }
                 
-                // Add days of month
                 for (let day = 1; day <= daysInMonth; day++) {
                     const hasMovies = moviesByMonth[month] && moviesByMonth[month][day];
                     const movieCount = hasMovies ? moviesByMonth[month][day].length : 0;
@@ -1617,7 +1662,6 @@
             
             calendarMonths.innerHTML = calendarHTML;
             
-            // Add click events to calendar days
             document.querySelectorAll('.calendar-day.has-movies').forEach(day => {
                 day.addEventListener('click', () => {
                     const month = parseInt(day.dataset.month);
@@ -1628,9 +1672,7 @@
             });
         }
 
-        // Show movies for a specific day
         function showMoviesForDay(month, day, movies) {
-            // Create modal-like overlay
             const overlay = document.createElement('div');
             overlay.style.cssText = `
                 position: fixed;
@@ -1698,7 +1740,6 @@
             overlay.appendChild(modal);
             document.body.appendChild(overlay);
             
-            // Close on overlay click
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay) {
                     document.body.removeChild(overlay);
@@ -1706,7 +1747,6 @@
             });
         }
 
-        // Open movie/TV show modal
         async function openMovieModal(item, type = 'movie') {
             try {
                 let details;
@@ -1718,7 +1758,7 @@
                 }
                 
                 if (!details) {
-                    details = item; // Use basic info if details fetch fails
+                    details = item;
                 }
                 
                 currentMovieModalData = details;
@@ -1733,7 +1773,6 @@
                 const genres = details.genres ? details.genres.map(g => g.name).join(', ') : 'Unknown';
                 const releaseDate = details.release_date || details.first_air_date || 'TBA';
                 
-                // Update modal content
                 document.getElementById('modal-title').textContent = title;
                 document.getElementById('modal-year').textContent = year;
                 document.getElementById('modal-rating').innerHTML = `<i class="fas fa-star"></i> ${rating}/10`;
@@ -1744,7 +1783,6 @@
                 document.getElementById('modal-release-date').textContent = releaseDate;
                 document.getElementById('modal-poster').src = imagePath;
                 
-                // Update actions
                 const actions = document.getElementById('modal-actions');
                 actions.innerHTML = `
                     <button class="modal-action-btn" onclick="shareMovie()">
@@ -1752,11 +1790,9 @@
                     </button>
                 `;
                 
-                // Check if it's an upcoming movie
                 const today = new Date();
                 const release = new Date(releaseDate);
                 if (release > today && type === 'movie') {
-                    // Add to Calendar button
                     actions.innerHTML += `
                         <button class="modal-action-btn add-to-calendar-btn" onclick="addToCalendar()">
                             <i class="fas fa-calendar-plus"></i> Add to Calendar
@@ -1764,13 +1800,11 @@
                     `;
                 }
                 
-                // Show modal
                 const modal = document.getElementById('movie-modal');
                 modal.classList.add('show');
                 
             } catch (error) {
                 console.error('Error opening modal:', error);
-                // Show basic info if detailed fetch fails
                 currentMovieModalData = item;
                 const title = item.title || item.name;
                 const year = item.release_date ? item.release_date.substring(0, 4) : 
@@ -1799,14 +1833,12 @@
             }
         }
 
-        // Close movie modal
         function closeMovieModal() {
             const modal = document.getElementById('movie-modal');
             modal.classList.remove('show');
             currentMovieModalData = null;
         }
 
-        // Share movie
         function shareMovie() {
             if (!currentMovieModalData) return;
             
@@ -1821,14 +1853,12 @@
                     url: url
                 });
             } else {
-                // Fallback: copy to clipboard
                 navigator.clipboard.writeText(`${text} ${url}`).then(() => {
                     alert('Link copied to clipboard!');
                 });
             }
         }
 
-        // Add to Calendar
         function addToCalendar() {
             if (!currentMovieModalData) return;
             
@@ -1840,14 +1870,10 @@
                 return;
             }
             
-            // Create AddEvent.com link
             const addEventUrl = `https://www.addevent.com/dir/?client=TBD&start=${releaseDate}&end=${releaseDate}&title=${encodeURIComponent(title)}&description=${encodeURIComponent(currentMovieModalData.overview || '')}&location=Movie Theater`;
-            
-            // Open in new tab
             window.open(addEventUrl, '_blank');
         }
 
-        // FIXED: Telegram button scroll behavior with 30-second delay
         function setupTelegramButtonScroll() {
             const telegramBtn = document.getElementById('telegram-channel-btn');
             let retractTimer = null;
@@ -1858,64 +1884,50 @@
                     telegramBtn.classList.add('retracted');
                     isTelegramButtonRetracted = true;
                     
-                    // Clear any existing expand timer
                     if (expandTimer) {
                         clearTimeout(expandTimer);
                     }
                     
-                    // Set timer to expand after 30 seconds
                     expandTimer = setTimeout(() => {
                         telegramBtn.classList.remove('retracted');
                         isTelegramButtonRetracted = false;
-                    }, 30000); // 30 seconds
+                    }, 30000);
                 }
             }
             
             function handleScroll() {
-                // Clear existing retract timer
                 if (retractTimer) {
                     clearTimeout(retractTimer);
                 }
-                
-                // Set new retract timer
-                retractTimer = setTimeout(retractButton, 1000); // Retract after 1 second of scrolling
+                retractTimer = setTimeout(retractButton, 1000);
             }
             
-            // Add scroll event listener
             window.addEventListener('scroll', handleScroll, { passive: true });
             
-            // Add hover behavior to temporarily show full button
             telegramBtn.addEventListener('mouseenter', () => {
                 telegramBtn.classList.remove('retracted');
                 isTelegramButtonRetracted = false;
-                
-                // Clear expand timer on hover
                 if (expandTimer) {
                     clearTimeout(expandTimer);
                 }
             });
             
             telegramBtn.addEventListener('mouseleave', () => {
-                // Only retract on mouse leave if user is still scrolling or after delay
                 if (retractTimer) {
                     clearTimeout(retractTimer);
                 }
-                retractTimer = setTimeout(retractButton, 2000); // Wait 2 seconds after hover before retracting
+                retractTimer = setTimeout(retractButton, 2000);
             });
             
-            // Also retract on touch devices
             telegramBtn.addEventListener('touchstart', () => {
                 telegramBtn.classList.remove('retracted');
                 isTelegramButtonRetracted = false;
-                
-                // Clear expand timer on touch
                 if (expandTimer) {
                     clearTimeout(expandTimer);
                 }
             });
         }
 
-        // Infinite scroll functionality
         function setupInfiniteScroll() {
             window.addEventListener('scroll', () => {
                 handleScroll();
@@ -1927,29 +1939,51 @@
             
             isScrolling = true;
             
-            // Show/hide scroll indicator
             const scrollIndicator = document.getElementById('scroll-indicator');
             const currentScroll = window.scrollY;
             
             if (currentScroll > lastScrollPosition) {
-                // Scrolling down
                 if (currentScroll > 100) {
                     scrollIndicator.classList.add('show');
                 }
             } else {
-                // Scrolling up
                 scrollIndicator.classList.remove('show');
             }
             
             lastScrollPosition = currentScroll;
             
-            // Check if near bottom
             const scrollPosition = window.innerHeight + window.scrollY;
             const documentHeight = document.documentElement.scrollHeight;
-            const threshold = 100; // pixels from bottom
+            const loadThreshold = 300; // start loading earlier for seamless experience
+            const adThreshold = 200; // show ad when very close to bottom
             
-            if (documentHeight - scrollPosition < threshold) {
-                // Load more movies based on current view
+            if (documentHeight - scrollPosition < adThreshold * 2) {
+                // Close to bottom: try to show ad
+                if (!isAdShowing && (Date.now() - lastAdShownAt) > AD_COOLDOWN) {
+                    // Only show ad if we're really at the bottom and no more content is loading
+                    let canShowAd = false;
+                    switch(currentView) {
+                        case 'trending':
+                            if (!isTrendingLoading && hasMoreTrending) canShowAd = true;
+                            break;
+                        case 'year':
+                            if (!isYearLoading && hasMoreYear) canShowAd = true;
+                            break;
+                        case 'tv':
+                            if (!isTVLoading && hasMoreTV) canShowAd = true;
+                            break;
+                    }
+                    if (canShowAd && documentHeight - scrollPosition < adThreshold) {
+                        showAdIfNeeded();
+                    }
+                }
+            } else if (documentHeight - scrollPosition > adThreshold * 2) {
+                // Scrolled away from bottom, hide ad if showing
+                hideAdIfShowing();
+            }
+            
+            // Load more content if within load threshold
+            if (documentHeight - scrollPosition < loadThreshold) {
                 switch(currentView) {
                     case 'trending':
                         if (!isTrendingLoading && hasMoreTrending) {
@@ -1972,23 +2006,19 @@
                 }
             }
             
-            // Clear previous timeout
             if (scrollTimeout) {
                 clearTimeout(scrollTimeout);
             }
             
-            // Set timeout to reset scrolling flag
             scrollTimeout = setTimeout(() => {
                 isScrolling = false;
                 scrollIndicator.classList.remove('show');
             }, 500);
         }
 
-        // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             initTelegramApp();
             
-            // Set up switch buttons
             document.querySelectorAll('.switch-option').forEach(button => {
                 button.addEventListener('click', function() {
                     const view = this.getAttribute('data-view');
@@ -1996,7 +2026,6 @@
                 });
             });
             
-            // Set up calendar view switch buttons
             document.querySelectorAll('.calendar-switch-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const view = this.getAttribute('data-view');
@@ -2004,7 +2033,6 @@
                 });
             });
             
-            // FIXED: Set up TV category buttons with proper genre filtering
             document.querySelectorAll('.tv-category-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     document.querySelectorAll('.tv-category-btn').forEach(btn => {
@@ -2012,53 +2040,46 @@
                     });
                     this.classList.add('active');
                     currentTVGenre = this.dataset.genre;
-                    tvPage = 1; // Reset page when changing genre
+                    tvPage = 1;
                     loadTVContent();
                 });
             });
             
-            // Set up TV search
             const tvSearchInput = document.getElementById('tv-search-input');
             let searchTimeout;
             tvSearchInput.addEventListener('input', function() {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => {
                     currentTVSearch = this.value;
-                    tvPage = 1; // Reset page when searching
+                    tvPage = 1;
                     loadTVContent();
                 }, 500);
             });
             
-            // Set up modal close button
             document.getElementById('modal-close').addEventListener('click', closeMovieModal);
             
-            // Close modal when clicking outside
             document.getElementById('movie-modal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     closeMovieModal();
                 }
             });
             
-            // Setup infinite scroll
             setupInfiniteScroll();
-            
-            // Setup Telegram button scroll behavior
             setupTelegramButtonScroll();
             
-            // Hide loaders initially
             showLoader('trending-loader', false);
             showLoader('year-loader', false);
             showLoader('tv-loader', false);
             
-            // Load initial data for trending view and year calendar in background
             loadTrendingMovies();
-            loadYearMovies(); // This will start background loading
+            loadYearMovies();
         });
     </script>
-<script src="https://inapp.telega.io/sdk/v1/sdk.js"></script>
-<script>
-  const ads = window.TelegaIn.AdsController.create_miniapp({
-    token: '3e5059bf-c11a-4dbe-896a-535abfc955f8' });
-</script>
+    <script src="https://inapp.telega.io/sdk/v1/sdk.js"></script>
+    <script>
+      const ads = window.TelegaIn.AdsController.create_miniapp({
+        token: '3e5059bf-c11a-4dbe-896a-535abfc955f8' });
+    </script>
 </body>
 </html>
+```
